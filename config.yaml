@@ -1,0 +1,41 @@
+baseurl: https://github.com/ZielsLab/SIPmg.github.io.git
+languageCode: en-us
+title: SIPmg
+theme: hugo-lithium
+googleAnalytics: ''
+disqusShortname: ''
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _cache$
+  - \.knit\.md$
+  - \.utf8\.md$
+permalinks:
+  post: /:year/:month/:day/:slug/
+menu:
+  main:
+    - name: ZielsLab
+      url: https://emberrlab.civil.ubc.ca/
+    - name: SIPmg-GitHub
+      url: https://github.com/ZielsLab/SIPmg
+params:
+  MathJaxCDN: //cdnjs.cloudflare.com/ajax/libs
+  MathJaxVersion: 2.7.5
+  description: SIPmg is a statistical analysis package as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating MAGs.The package utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP R package, please visit their vignette
+  favicon: favicon.ico
+  highlightjsCDN: //cdnjs.cloudflare.com/ajax/libs
+  highlightjsLang:
+    - r
+    - yaml
+  highlightjsTheme: github
+  highlightjsVersion: 9.12.0
+  logo:
+    alt: Logo
+    height: 50
+    url: logo.png
+    width: 50
+markup:
+  defaultMarkdownHandler: goldmark
+  goldmark:
+    renderer:
+      unsafe: yes
