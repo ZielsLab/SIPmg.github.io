@@ -1,0 +1,27 @@
+--- 
+title: "Introduction to SIPmg"
+author: "Pranav Sampara, Kate Waring, Ryan Ziels"
+date: "`r Sys.Date()`"
+documentclass: book
+cover-image: "images/EMBERR_logo-2.png"
+description: |
+  SIPmg is a statistical analysis package as part of a stable isotope probing
+  (SIP) metagenomics study to identify isotope incorporating MAGs.The package
+  utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+  HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+  R package, please visit their vignette
+output:
+  bookdown::html_document
+site: bookdown::bookdown_site
+github-repo: ZielsLab/SIPmg.github.io
+---
+
+# Introduction
+
+The SIPmg R package was designed to enable the exploration and statistical analysis of qSIP metagenomics data. Particularly, this package allows the identification of isotope incorporators and quantifies isotopic enrichment.
+
+Please check out introductory vignettes with some [background information](#background) and a [quick example pipeline](#quick-example), before checking out vignettes on:
+
+[Coverage normalization and scaling based on linear regression model](#scaling-coverage-data)
+
+[Identification of incorporators based on qSIP, ΔBD, or DESeq2 methods](#identifying-incorporators)

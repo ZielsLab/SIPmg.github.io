@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 SIP metagenomics and identification of isotope incorporators | Introduction to SIPmg</title>
+  <meta name="description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 SIP metagenomics and identification of isotope incorporators | Introduction to SIPmg" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/images/EMBERR_logo-2.png" />
+  <meta property="og:description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="github-repo" content="ZielsLab/SIPmg.github.io" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 SIP metagenomics and identification of isotope incorporators | Introduction to SIPmg" />
+  
+  <meta name="twitter:description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="twitter:image" content="/images/EMBERR_logo-2.png" />
+
+<meta name="author" content="Pranav Sampara, Kate Waring, Ryan Ziels" />
+
+
+<meta name="date" content="2023-01-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="scaling-coverage-data.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#stable-isotope-probing"><i class="fa fa-check"></i><b>2.1</b> Stable isotope probing</a></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#quantitative-metagenomics"><i class="fa fa-check"></i><b>2.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.3" data-path="background.html"><a href="background.html#quantitative-sip-qsip"><i class="fa fa-check"></i><b>2.3</b> Quantitative SIP (qSIP)</a></li>
+<li class="chapter" data-level="2.4" data-path="background.html"><a href="background.html#for-details-on-sip-quantitative-metagenomics-and-qsip-please-refer-to-the-following-works"><i class="fa fa-check"></i><b>2.4</b> For details on SIP, quantitative metagenomics, and qSIP, please refer to the following works:</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="background.html"><a href="background.html#sip"><i class="fa fa-check"></i><b>2.4.1</b> SIP</a></li>
+<li class="chapter" data-level="2.4.2" data-path="background.html"><a href="background.html#quantitative-metagenomics-1"><i class="fa fa-check"></i><b>2.4.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.4.3" data-path="background.html"><a href="background.html#qsip"><i class="fa fa-check"></i><b>2.4.3</b> qSIP</a></li>
+<li class="chapter" data-level="2.4.4" data-path="background.html"><a href="background.html#htssip-r-package"><i class="fa fa-check"></i><b>2.4.4</b> HTSSIP R package</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="quick-example.html"><a href="quick-example.html"><i class="fa fa-check"></i><b>3</b> Using SIPmg R package</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="quick-example.html"><a href="quick-example.html#example-workflow"><i class="fa fa-check"></i><b>3.1</b> Example workflow</a></li>
+<li class="chapter" data-level="3.2" data-path="quick-example.html"><a href="quick-example.html#load-required-data"><i class="fa fa-check"></i><b>3.2</b> Load required data</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="quick-example.html"><a href="quick-example.html#mag-coverage-data"><i class="fa fa-check"></i><b>3.2.1</b> MAG coverage data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="quick-example.html"><a href="quick-example.html#sequin-metadata"><i class="fa fa-check"></i><b>3.2.2</b> Sequin metadata</a></li>
+<li class="chapter" data-level="3.2.3" data-path="quick-example.html"><a href="quick-example.html#dilutions-data"><i class="fa fa-check"></i><b>3.2.3</b> Dilutions data</a></li>
+<li class="chapter" data-level="3.2.4" data-path="quick-example.html"><a href="quick-example.html#fractions-metadata"><i class="fa fa-check"></i><b>3.2.4</b> Fractions metadata</a></li>
+<li class="chapter" data-level="3.2.5" data-path="quick-example.html"><a href="quick-example.html#gtdb-style-taxonomy-data"><i class="fa fa-check"></i><b>3.2.5</b> GTDB style taxonomy data</a></li>
+<li class="chapter" data-level="3.2.6" data-path="quick-example.html"><a href="quick-example.html#mag-absolute-concentrations"><i class="fa fa-check"></i><b>3.2.6</b> MAG absolute concentrations</a></li>
+<li class="chapter" data-level="3.2.7" data-path="quick-example.html"><a href="quick-example.html#gc-content"><i class="fa fa-check"></i><b>3.2.7</b> GC content</a></li>
+<li class="chapter" data-level="3.2.8" data-path="quick-example.html"><a href="quick-example.html#log-scale-boolean"><i class="fa fa-check"></i><b>3.2.8</b> Log scale BOOLEAN</a></li>
+<li class="chapter" data-level="3.2.9" data-path="quick-example.html"><a href="quick-example.html#coefficient-of-variation"><i class="fa fa-check"></i><b>3.2.9</b> Coefficient of variation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="quick-example.html"><a href="quick-example.html#coverage-normalization-and-scaling"><i class="fa fa-check"></i><b>3.3</b> Coverage normalization and scaling</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="quick-example.html"><a href="quick-example.html#this-function-uses-the-following-datasets"><i class="fa fa-check"></i><b>3.3.1</b> This function uses the following datasets:</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="quick-example.html"><a href="quick-example.html#preparation-of-scaled-data-for-qsip-analysis"><i class="fa fa-check"></i><b>3.4</b> Preparation of scaled data for qSIP analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="quick-example.html"><a href="quick-example.html#estimation-of-atom-fraction-excess"><i class="fa fa-check"></i><b>3.5</b> Estimation of atom fraction excess</a></li>
+<li class="chapter" data-level="3.6" data-path="quick-example.html"><a href="quick-example.html#plot-the-atom-fraction-excess-plot"><i class="fa fa-check"></i><b>3.6</b> Plot the atom fraction excess plot</a></li>
+<li class="chapter" data-level="3.7" data-path="quick-example.html"><a href="quick-example.html#check-incorporator-list"><i class="fa fa-check"></i><b>3.7</b> Check incorporator list</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html"><i class="fa fa-check"></i><b>4</b> Scaling coverage data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#basic-approach-for-scaling"><i class="fa fa-check"></i><b>4.1</b> Basic approach for scaling</a></li>
+<li class="chapter" data-level="4.2" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#choice-of-regression-model"><i class="fa fa-check"></i><b>4.2</b> Choice of regression model</a></li>
+<li class="chapter" data-level="4.3" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#scaling-the-data"><i class="fa fa-check"></i><b>4.3</b> Scaling the data</a></li>
+<li class="chapter" data-level="4.4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#comparison-of-the-fits"><i class="fa fa-check"></i><b>4.4</b> Comparison of the fits</a></li>
+<li class="chapter" data-level="4.5" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#what-if-there-were-no-sequins-added-in-the-study"><i class="fa fa-check"></i><b>4.5</b> What if there were no sequins added in the study</a></li>
+<li class="chapter" data-level="4.6" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#decision-on-the-method-to-scale-coverages"><i class="fa fa-check"></i><b>4.6</b> Decision on the method to scale coverages</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html"><i class="fa fa-check"></i><b>5</b> SIP metagenomics and identification of isotope incorporators</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>5.1</b> Comparison of the methods</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#afe-method"><i class="fa fa-check"></i><b>5.1.1</b> AFE method</a></li>
+<li class="chapter" data-level="5.1.2" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#mw-hr-sip"><i class="fa fa-check"></i><b>5.1.2</b> MW-HR-SIP</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to SIPmg</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="identifying-incorporators" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> SIP metagenomics and identification of isotope incorporators<a href="identifying-incorporators.html#identifying-incorporators" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The isotope incorporators could be identified using the below methods:</p>
+<ul>
+<li>AFE mathematical model by <a href="https://journals.asm.org/doi/10.1128/AEM.02280-15">Hungate et al. (2015)</a> or
+<ul>
+<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where <span class="math inline">\(I_{max}\)</span> is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
+<li>MW-HR-SIP <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al. </a></li>
+</ul></li>
+</ul>
+<p>While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and <a href="https://cran.r-project.org/web/packages/HTSSIP/index.html">HTS-SIP R package</a> for more details.</p>
+<div id="comparison-of-the-methods" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Comparison of the methods<a href="identifying-incorporators.html#comparison-of-the-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="afe-method" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> AFE method<a href="identifying-incorporators.html#afe-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Isotope incorporators from the introductory vignette were identified using the AFE method
+Reproducing the code here, we have</p>
+<pre><code>## Rows: 124 Columns: 61
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): Feature
+## dbl (60): 12C_rep_1_fraction_10, 12C_rep_1_fraction_1, 12C_rep_1_fraction_2,...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 115 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): Feature, Sequence
+## dbl (3): Length, GC_content, Concentration
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 60 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Sample
+## dbl (1): Dilution
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 33 Columns: 19
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr  (2): user_genome, classification
+## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 5 Columns: 19
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr  (2): user_genome, classification
+## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 38 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): OTU
+## dbl (1): Gi
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 60 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): Isotope, Sample
+## dbl (4): Replicate, Fraction, Buoyant_density, DNA_concentration(ng/uL)
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre><code>## Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_lm&#39; already exists</code></pre>
+<pre><code>## Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,
+## reason &#39;Permission denied&#39;</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="identifying-incorporators.html#cb69-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb69-2"><a href="identifying-incorporators.html#cb69-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb69-3"><a href="identifying-incorporators.html#cb69-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb69-4"><a href="identifying-incorporators.html#cb69-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
+<span id="cb69-5"><a href="identifying-incorporators.html#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb69-6"><a href="identifying-incorporators.html#cb69-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>)</span>
+<span id="cb69-7"><a href="identifying-incorporators.html#cb69-7" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb69-8"><a href="identifying-incorporators.html#cb69-8" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb69-9"><a href="identifying-incorporators.html#cb69-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator_qSIP =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
+<span id="cb69-10"><a href="identifying-incorporators.html#cb69-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">Incorporator_delbd =</span> A_delbd <span class="sc">-</span> A_delbd_sd <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb69-11"><a href="identifying-incorporators.html#cb69-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> stats<span class="sc">::</span><span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
+<span id="cb69-12"><a href="identifying-incorporators.html#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-13"><a href="identifying-incorporators.html#cb69-13" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb69-14"><a href="identifying-incorporators.html#cb69-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(taxonomy_tibble <span class="sc">%&gt;%</span> </span>
+<span id="cb69-15"><a href="identifying-incorporators.html#cb69-15" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">select</span>(user_genome, classification) <span class="sc">%&gt;%</span></span>
+<span id="cb69-16"><a href="identifying-incorporators.html#cb69-16" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">OTU =</span> user_genome)) </span></code></pre></div>
+<pre><code>## Joining, by = &quot;OTU&quot;</code></pre>
+</div>
+<div id="mw-hr-sip" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> MW-HR-SIP<a href="identifying-incorporators.html#mw-hr-sip" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="identifying-incorporators.html#cb71-1" aria-hidden="true" tabindex="-1"></a>windows <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">density_min=</span><span class="fu">c</span>(<span class="fl">1.71</span>,<span class="fl">1.72</span>, <span class="fl">1.73</span>), </span>
+<span id="cb71-2"><a href="identifying-incorporators.html#cb71-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
+<span id="cb71-3"><a href="identifying-incorporators.html#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-4"><a href="identifying-incorporators.html#cb71-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb71-5"><a href="identifying-incorporators.html#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
+<span id="cb71-6"><a href="identifying-incorporators.html#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
+<span id="cb71-7"><a href="identifying-incorporators.html#cb71-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-8"><a href="identifying-incorporators.html#cb71-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
+<span id="cb71-9"><a href="identifying-incorporators.html#cb71-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
+<span id="cb71-10"><a href="identifying-incorporators.html#cb71-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sparsity_threshold =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>), </span>
+<span id="cb71-11"><a href="identifying-incorporators.html#cb71-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padj_cutoff =</span> padj_cutoff)</span></code></pre></div>
+<pre><code>## Sparsity threshold: 0 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.05 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.1 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.15 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.2 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.25 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.3 
+## Density window: 1.71-1.74</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.05 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.1 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.15 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.2 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.25 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.3 
+## Density window: 1.72-1.75</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.05 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.1 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.15 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.2 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.25 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold: 0.3 
+## Density window: 1.73-1.76</code></pre>
+<pre><code>## converting counts to integer mode</code></pre>
+<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
+## design formula are characters, converting to factors</code></pre>
+<pre><code>## Sparsity threshold with the most rejected hypotheses: 0</code></pre>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="identifying-incorporators.html#cb136-1" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb136-2"><a href="identifying-incorporators.html#cb136-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">incorp =</span> padj <span class="sc">&lt;</span> padj_cutoff)</span></code></pre></div>
+<p>Compare number of incorporators</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="identifying-incorporators.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb137-2"><a href="identifying-incorporators.html#cb137-2" aria-hidden="true" tabindex="-1"></a>qSIP_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb137-3"><a href="identifying-incorporators.html#cb137-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A, A_sd, Incorporator_qSIP) <span class="sc">%&gt;%</span></span>
+<span id="cb137-4"><a href="identifying-incorporators.html#cb137-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_qSIP <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb137-5"><a href="identifying-incorporators.html#cb137-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb137-6"><a href="identifying-incorporators.html#cb137-6" aria-hidden="true" tabindex="-1"></a>n_qSIP_incorp <span class="ot">=</span> <span class="fu">nrow</span>(qSIP_incorp)</span>
+<span id="cb137-7"><a href="identifying-incorporators.html#cb137-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-8"><a href="identifying-incorporators.html#cb137-8" aria-hidden="true" tabindex="-1"></a>delbd_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb137-9"><a href="identifying-incorporators.html#cb137-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) <span class="sc">%&gt;%</span></span>
+<span id="cb137-10"><a href="identifying-incorporators.html#cb137-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_delbd <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb137-11"><a href="identifying-incorporators.html#cb137-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb137-12"><a href="identifying-incorporators.html#cb137-12" aria-hidden="true" tabindex="-1"></a>n_delbd_incorp <span class="ot">=</span> <span class="fu">nrow</span>(delbd_incorp)</span>
+<span id="cb137-13"><a href="identifying-incorporators.html#cb137-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-14"><a href="identifying-incorporators.html#cb137-14" aria-hidden="true" tabindex="-1"></a>mw.hr.sip_incorp <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb137-15"><a href="identifying-incorporators.html#cb137-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, taxa, incorp) <span class="sc">%&gt;%</span></span>
+<span id="cb137-16"><a href="identifying-incorporators.html#cb137-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(incorp <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb137-17"><a href="identifying-incorporators.html#cb137-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="st">&quot;Incorporator_mw_hr.sip&quot;</span> <span class="ot">=</span> <span class="st">&quot;incorp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb137-18"><a href="identifying-incorporators.html#cb137-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>taxa)</span>
+<span id="cb137-19"><a href="identifying-incorporators.html#cb137-19" aria-hidden="true" tabindex="-1"></a>n_mw.hr.sip_incorp <span class="ot">=</span> <span class="fu">nrow</span>(mw.hr.sip_incorp)</span>
+<span id="cb137-20"><a href="identifying-incorporators.html#cb137-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-21"><a href="identifying-incorporators.html#cb137-21" aria-hidden="true" tabindex="-1"></a>all_incorp_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(qSIP_incorp, dplyr<span class="sc">::</span><span class="fu">full_join</span>(delbd_incorp, mw.hr.sip_incorp, <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>), <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>)</span>
+<span id="cb137-22"><a href="identifying-incorporators.html#cb137-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-23"><a href="identifying-incorporators.html#cb137-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb137-24"><a href="identifying-incorporators.html#cb137-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by qSIP:&#39;</span>, n_qSIP_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>## Number of incorporators detected by qSIP: 25</code></pre>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="identifying-incorporators.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by ΔBD:&#39;</span>, n_delbd_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>## Number of incorporators detected by ΔBD: 25</code></pre>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="identifying-incorporators.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by MW-HR-SIP:&#39;</span>, n_mw.hr.sip_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>## Number of incorporators detected by MW-HR-SIP: 6</code></pre>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="identifying-incorporators.html#cb143-1" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(all_incorp_tibble)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["OTU"],"name":[1],"type":["chr"],"align":["left"]},{"label":["A"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["A_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Incorporator_qSIP"],"name":[4],"type":["lgl"],"align":["right"]},{"label":["A_delbd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["A_delbd_sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Incorporator_delbd"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["Incorporator_mw_hr.sip"],"name":[8],"type":["lgl"],"align":["right"]}],"data":[{"1":"NC_000913.3","2":"0.01559359","3":"0.002091374","4":"TRUE","5":"0.02406311","6":"0.003225629","7":"TRUE","8":"NA"},{"1":"NC_003450.3","2":"0.04847647","3":"0.003708503","4":"TRUE","5":"0.07472437","6":"0.005715178","7":"TRUE","8":"NA"},{"1":"NC_008261.1","2":"0.40987487","3":"0.005120050","4":"TRUE","5":"0.62217710","6":"0.007671753","7":"TRUE","8":"TRUE"},{"1":"NC_010067.1","2":"0.02115236","3":"0.002669788","4":"TRUE","5":"0.03263313","6":"0.004116374","7":"TRUE","8":"NA"},{"1":"NC_014008.1","2":"0.05571908","3":"0.001253195","4":"TRUE","5":"0.08588456","6":"0.001929710","7":"TRUE","8":"NA"},{"1":"NC_014168.1","2":"0.19241466","3":"0.002746633","4":"TRUE","5":"0.29510881","6":"0.004188570","7":"TRUE","8":"NA"},{"1":"NC_014210.1","2":"0.26572526","3":"0.001003649","4":"TRUE","5":"0.40677094","6":"0.001531631","7":"TRUE","8":"NA"},{"1":"NC_014211.1","2":"0.25457996","3":"0.004842409","4":"TRUE","5":"0.38969078","6":"0.007368179","7":"TRUE","8":"NA"},{"1":"NC_014212.1","2":"0.17145305","3":"0.013829994","4":"TRUE","5":"0.26328878","6":"0.021166596","7":"TRUE","8":"NA"},{"1":"NC_014213.1","2":"0.18323983","3":"0.009626021","4":"TRUE","5":"0.28122785","6":"0.014749334","7":"TRUE","8":"NA"},{"1":"NC_014214.1","2":"0.17572222","3":"0.005484273","4":"TRUE","5":"0.26974532","6":"0.008401266","7":"TRUE","8":"NA"},{"1":"NC_014363.1","2":"0.18240538","3":"0.003724266","4":"TRUE","5":"0.27994855","6":"0.005718211","7":"TRUE","8":"NA"},{"1":"NC_015761.1","2":"0.02075433","3":"0.001495422","4":"TRUE","5":"0.03202098","6":"0.002306621","7":"TRUE","8":"NA"},{"1":"NC_017033.1","2":"0.17788410","3":"0.004758109","4":"TRUE","5":"0.27309952","6":"0.007294859","7":"TRUE","8":"NA"},{"1":"NC_018014.1","2":"0.11933315","3":"0.002381048","4":"TRUE","5":"0.18348339","6":"0.003649853","7":"TRUE","8":"NA"},{"1":"NC_019792.1","2":"0.15582689","3":"0.001729569","4":"TRUE","5":"0.23937276","6":"0.002645053","7":"TRUE","8":"NA"},{"1":"NC_019897.1","2":"0.12756736","3":"0.002739246","4":"TRUE","5":"0.19611237","6":"0.004202457","7":"TRUE","8":"NA"},{"1":"NC_019936.1","2":"0.15923443","3":"0.003366670","4":"TRUE","5":"0.24457921","6":"0.005160172","7":"TRUE","8":"NA"},{"1":"NC_019937.1","2":"0.05922982","3":"0.003018288","4":"TRUE","5":"0.09129203","6":"0.004646234","7":"TRUE","8":"NA"},{"1":"NC_019938.1","2":"0.10114853","3":"0.004781642","4":"TRUE","5":"0.15558613","6":"0.007352333","7":"TRUE","8":"NA"},{"1":"NC_019939.1","2":"0.16398224","3":"0.011721812","4":"TRUE","5":"0.25182466","6":"0.017927258","7":"TRUE","8":"NA"},{"1":"NC_019964.1","2":"0.18205895","3":"0.003576154","4":"TRUE","5":"0.27942488","6":"0.005476378","7":"TRUE","8":"NA"},{"1":"NC_019974.1","2":"0.17720421","3":"0.002021406","4":"TRUE","5":"0.27195722","6":"0.003094519","7":"TRUE","8":"NA"},{"1":"NC_019975.1","2":"0.06581470","3":"0.012121626","4":"TRUE","5":"0.10139967","6":"0.018645191","7":"TRUE","8":"NA"},{"1":"NC_019976.1","2":"0.12916152","3":"0.001744027","4":"TRUE","5":"0.19853018","6":"0.002670578","7":"TRUE","8":"NA"},{"1":"NC_002737.2","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_009012.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_017095.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018066.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018515.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>It is evident here that the AFE estimates using qSIP model or the ΔBD method are not the same, however, both provide the same incorporator information. Although the incorporators may not be the same everytime, we found an overlap between qSIP and ΔBD methods in our metagenome datasets. We also found that qSIP model provided more accurate estimates of AFE compared to ΔBD method.
+
+It also appears that MW-HR-SIP outputs lower number of incorporators. In our study and by <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al.</a>, MW-HR-SIP was found to have better sensitivity compared to qSIP or ΔBD methods. It is interesting that the AFE based methods and differential abundance based methods do not provide the same incorporator identity, which is perhaps due to comparistive analysis in only the multiple overlapping windows in the MW-HR-SIP method, while the AFE methods examine the complete BD gradient. Due to the higher sensitivity of the MW-HR-SIP method, we attempted a sequential analysis with first MW-HR-SIP to eliminate likely false positives, and then perform qSIP to estimate AFE. Such a method reduces multiple comparisons and increases confidence in detecting true incorporators due to higher statistical power.
+
+We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user’s discretion that fits best their study.
+## Session information</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="identifying-incorporators.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.2.2 (2022-10-31 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Canada.utf8  LC_CTYPE=English_Canada.utf8   
+## [3] LC_MONETARY=English_Canada.utf8 LC_NUMERIC=C                   
+## [5] LC_TIME=English_Canada.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] SIPmg_1.4           ggpubr_0.5.0        HTSSIP_1.4.1       
+##  [4] phyloseq_1.42.0     forcats_0.5.2       stringr_1.5.0      
+##  [7] dplyr_1.0.10        purrr_0.3.5         readr_2.1.3        
+## [10] tidyr_1.2.1         tibble_3.1.8        ggplot2_3.4.0      
+## [13] tidyverse_1.3.2     BiocManager_1.30.19
+## 
+## loaded via a namespace (and not attached):
+##   [1] readxl_1.4.1                backports_1.4.1            
+##   [3] plyr_1.8.8                  igraph_1.3.5               
+##   [5] lazyeval_0.2.2              splines_4.2.2              
+##   [7] BiocParallel_1.32.4         GenomeInfoDb_1.34.4        
+##   [9] digest_0.6.30               foreach_1.5.2              
+##  [11] htmltools_0.5.4             fansi_1.0.3                
+##  [13] magrittr_2.0.3              memoise_2.0.1              
+##  [15] googlesheets4_1.0.1         cluster_2.1.4              
+##  [17] tzdb_0.3.0                  Biostrings_2.66.0          
+##  [19] annotate_1.76.0             modelr_0.1.10              
+##  [21] matrixStats_0.63.0          vroom_1.6.0                
+##  [23] timechange_0.1.1            colorspace_2.0-3           
+##  [25] blob_1.2.3                  rvest_1.0.3                
+##  [27] haven_2.5.1                 xfun_0.35                  
+##  [29] crayon_1.5.2                RCurl_1.98-1.9             
+##  [31] jsonlite_1.8.4              survival_3.4-0             
+##  [33] iterators_1.0.14            ape_5.6-2                  
+##  [35] glue_1.6.2                  gtable_0.3.1               
+##  [37] gargle_1.2.1                zlibbioc_1.44.0            
+##  [39] XVector_0.38.0              DelayedArray_0.24.0        
+##  [41] car_3.1-1                   Rhdf5lib_1.20.0            
+##  [43] BiocGenerics_0.44.0         abind_1.4-5                
+##  [45] scales_1.2.1                DBI_1.1.3                  
+##  [47] rstatix_0.7.1               Rcpp_1.0.9                 
+##  [49] xtable_1.8-4                bit_4.0.5                  
+##  [51] stats4_4.2.2                httr_1.4.4                 
+##  [53] RColorBrewer_1.1-3          ellipsis_0.3.2             
+##  [55] farver_2.1.1                pkgconfig_2.0.3            
+##  [57] XML_3.99-0.13               sass_0.4.4                 
+##  [59] dbplyr_2.2.1                locfit_1.5-9.6             
+##  [61] utf8_1.2.2                  labeling_0.4.2             
+##  [63] polynom_1.4-1               tidyselect_1.2.0           
+##  [65] rlang_1.0.6                 reshape2_1.4.4             
+##  [67] AnnotationDbi_1.60.0        munsell_0.5.0              
+##  [69] cellranger_1.1.0            tools_4.2.2                
+##  [71] cachem_1.0.6                cli_3.4.1                  
+##  [73] generics_0.1.3              RSQLite_2.2.19             
+##  [75] ade4_1.7-20                 broom_1.0.1                
+##  [77] evaluate_0.19               biomformat_1.26.0          
+##  [79] fastmap_1.1.0               yaml_2.3.6                 
+##  [81] knitr_1.41                  bit64_4.0.5                
+##  [83] fs_1.5.2                    KEGGREST_1.38.0            
+##  [85] nlme_3.1-160                xml2_1.3.3                 
+##  [87] compiler_4.2.2              rstudioapi_0.14            
+##  [89] png_0.1-8                   ggsignif_0.6.4             
+##  [91] reprex_2.0.2                geneplotter_1.76.0         
+##  [93] bslib_0.4.2                 stringi_1.7.8              
+##  [95] highr_0.10                  lattice_0.20-45            
+##  [97] Matrix_1.5-3                vegan_2.6-4                
+##  [99] permute_0.9-7               multtest_2.54.0            
+## [101] vctrs_0.5.1                 pillar_1.8.1               
+## [103] lifecycle_1.0.3             rhdf5filters_1.10.0        
+## [105] jquerylib_0.1.4             data.table_1.14.6          
+## [107] bitops_1.0-7                GenomicRanges_1.50.1       
+## [109] R6_2.5.1                    bookdown_0.31              
+## [111] IRanges_2.32.0              codetools_0.2-18           
+## [113] MASS_7.3-58.1               assertthat_0.2.1           
+## [115] rhdf5_2.42.0                SummarizedExperiment_1.28.0
+## [117] DESeq2_1.38.1               withr_2.5.0                
+## [119] S4Vectors_0.36.1            GenomeInfoDbData_1.2.9     
+## [121] mgcv_1.8-41                 parallel_4.2.2             
+## [123] hms_1.1.2                   grid_4.2.2                 
+## [125] rmarkdown_2.19              MatrixGenerics_1.10.0      
+## [127] carData_3.0-5               googledrive_2.0.0          
+## [129] Biobase_2.58.0              lubridate_1.9.0</code></pre>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="scaling-coverage-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

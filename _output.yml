@@ -1,0 +1,8 @@
+bookdown::gitbook:
+  highlight: tango
+css: style.css
+config:
+  link: "https://github.com/ZielsLab/SIPmg.github.io"
+text: "This is a vignette for SIPmg R package"
+toc:
+  collapse: section

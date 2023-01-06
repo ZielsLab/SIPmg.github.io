@@ -1,0 +1,155 @@
+# SIP metagenomics and identification of isotope incorporators {#identifying-incorporators}
+
+The isotope incorporators could be identified using the below methods:
+
++ AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where $I_{max}$ is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + MW-HR-SIP [Youngblut et al. ](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full)
+
+While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://cran.r-project.org/web/packages/HTSSIP/index.html) for more details.
+
+
+## Comparison of the methods
+
+### AFE method
+
+Isotope incorporators from the introductory vignette were identified using the AFE method
+Reproducing the code here, we have
+
+```{r Load data 3, echo = F}
+## Load data
+#Coverage metadata
+#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
+f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
+
+#Sequins metadata
+sequins <- readr::read_csv(file="mock_input_data/sequins_metadata.csv")
+
+#Dilutions data
+seq_dil = readr::read_csv(file = "mock_input_data/dilutions_data.csv")
+
+#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale
+log_scale = TRUE
+
+#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
+coe_of_variation = 20 
+
+#Taxonomy
+gtdbtk_bac_summary = readr::read_delim("mock_input_data/gtdbtk.bac120.summary.tsv", 
+                                 "\t", escape_double = FALSE, trim_ws = TRUE)
+gtdbtk_archaea = readr::read_delim("mock_input_data/gtdbtk.ar122.summary.tsv", 
+                             "\t", escape_double = FALSE, trim_ws = TRUE)
+#GC content
+GC_content <- readr::read_csv(file = "mock_input_data/GC_content.csv")
+
+#Fractions
+fractions = readr::read_csv("mock_input_data/fractions.csv")
+
+```
+
+```{r estimate absolute concentrations 2, echo = F}
+taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if it has not been done yet
+#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
+
+##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
+#For rlm scaling using scale_features_rlm
+#For rlm scaling using scale_features_lm
+mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE, save_plots = FALSE)
+mag_tab = as.matrix(mag_tab_scaled_lm$mag_tab) #Extract absolute abundances as a matrix
+```
+
+```{r Make phyloseq objects 2, echo = F}
+
+mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
+
+taxonomy.object = SIPmg::tax.table(taxonomy_tibble) # Create a taxonomy phyloseq object
+samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq object
+phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+```
+
+```{r AFE methodGet bootstrapped AFE table 2}
+atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
+                               control_expr='Isotope=="12C"',
+                               treatment_rep='Replicate',
+                               Gi = GC_content)
+#Bootstrap confidence intervals
+df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10)
+CI_threshold = 0
+df_atomX_boot = df_atomX_boot %>%
+  dplyr::mutate(Incorporator_qSIP = A_CI_fcr_low > CI_threshold,
+                Incorporator_delbd = A_delbd - A_delbd_sd > 0,
+         OTU = stats::reorder(OTU, -A))
+
+df_atomX_boot = df_atomX_boot %>%
+  dplyr::inner_join(taxonomy_tibble %>% 
+               dplyr::select(user_genome, classification) %>%
+               dplyr::rename(OTU = user_genome)) 
+```
+
+### MW-HR-SIP
+
+Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.
+
+```{r, MW-HR-SIP}
+windows = data.frame(density_min=c(1.71,1.72, 1.73), 
+                     density_max=c(1.74,1.75,1.76))
+
+padj_cutoff = 0.05
+#ncores = 6
+#doParallel::registerDoParallel(ncores)
+
+mw.hr.sip = SIPmg::HRSIP(physeq = phylo.qSIP, design = ~Isotope,
+                                    density_windows = windows,
+                                    sparsity_threshold = seq(0, 0.3, 0.05), 
+                                    padj_cutoff = padj_cutoff)
+
+mw.hr.sip = mw.hr.sip %>%
+  dplyr::mutate(incorp = padj < padj_cutoff)
+
+
+```
+
+Compare number of incorporators
+
+```{r list incorporators 2}
+#Get incorporator info
+qSIP_incorp = df_atomX_boot %>%
+  dplyr::select(OTU, classification, A, A_sd, Incorporator_qSIP) %>%
+  dplyr::filter(Incorporator_qSIP == TRUE) %>%
+  dplyr::select(-classification)
+n_qSIP_incorp = nrow(qSIP_incorp)
+
+delbd_incorp = df_atomX_boot %>%
+  dplyr::select(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) %>%
+  dplyr::filter(Incorporator_delbd == TRUE) %>%
+  dplyr::select(-classification)
+n_delbd_incorp = nrow(delbd_incorp)
+
+mw.hr.sip_incorp = mw.hr.sip %>%
+  dplyr::select(OTU, taxa, incorp) %>%
+  dplyr::filter(incorp == TRUE) %>%
+  dplyr::rename("Incorporator_mw_hr.sip" = "incorp") %>%
+  dplyr::select(-taxa)
+n_mw.hr.sip_incorp = nrow(mw.hr.sip_incorp)
+
+all_incorp_tibble = dplyr::full_join(qSIP_incorp, dplyr::full_join(delbd_incorp, mw.hr.sip_incorp, by = "OTU"), by = "OTU")
+
+#Print incorporator information
+cat('Number of incorporators detected by qSIP:', n_qSIP_incorp, '\n')
+cat('Number of incorporators detected by ΔBD:', n_delbd_incorp, '\n')
+cat('Number of incorporators detected by MW-HR-SIP:', n_mw.hr.sip_incorp, '\n')
+
+rmarkdown::paged_table(all_incorp_tibble)
+
+```
+
+It is evident here that the AFE estimates using qSIP model or the ΔBD method are not the same, however, both provide the same incorporator information. Although the incorporators may not be the same everytime, we found an overlap between qSIP and ΔBD methods in our metagenome datasets. We also found that qSIP model provided more accurate estimates of AFE compared to ΔBD method. 
+\n
+It also appears that MW-HR-SIP outputs lower number of incorporators. In our study and by [Youngblut et al.](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full), MW-HR-SIP was found to have better sensitivity compared to qSIP or ΔBD methods. It is interesting that the AFE based methods and differential abundance based methods do not provide the same incorporator identity, which is perhaps due to comparistive analysis in only the multiple overlapping windows in the MW-HR-SIP method, while the AFE methods examine the complete BD gradient. Due to the higher sensitivity of the MW-HR-SIP method, we attempted a sequential analysis with first MW-HR-SIP to eliminate likely false positives, and then perform qSIP to estimate AFE. Such a method reduces multiple comparisons and increases confidence in detecting true incorporators due to higher statistical power.
+\n
+We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user's discretion that fits best their study.
+## Session information
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,4 @@
+book_filename: SIPmg-vignette
+delete_merged_file: true
+output_dir: docs
+new_session: 'yes'

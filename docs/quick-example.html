@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Using SIPmg R package | Introduction to SIPmg</title>
+  <meta name="description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Using SIPmg R package | Introduction to SIPmg" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="/images/EMBERR_logo-2.png" />
+  <meta property="og:description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="github-repo" content="ZielsLab/SIPmg.github.io" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Using SIPmg R package | Introduction to SIPmg" />
+  
+  <meta name="twitter:description" content="<p>SIPmg is a statistical analysis package as part of a stable isotope probing
+(SIP) metagenomics study to identify isotope incorporating MAGs.The package
+utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as
+HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP
+R package, please visit their vignette</p>" />
+  <meta name="twitter:image" content="/images/EMBERR_logo-2.png" />
+
+<meta name="author" content="Pranav Sampara, Kate Waring, Ryan Ziels" />
+
+
+<meta name="date" content="2023-01-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="background.html"/>
+<link rel="next" href="scaling-coverage-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="background.html"><a href="background.html"><i class="fa fa-check"></i><b>2</b> Background</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="background.html"><a href="background.html#stable-isotope-probing"><i class="fa fa-check"></i><b>2.1</b> Stable isotope probing</a></li>
+<li class="chapter" data-level="2.2" data-path="background.html"><a href="background.html#quantitative-metagenomics"><i class="fa fa-check"></i><b>2.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.3" data-path="background.html"><a href="background.html#quantitative-sip-qsip"><i class="fa fa-check"></i><b>2.3</b> Quantitative SIP (qSIP)</a></li>
+<li class="chapter" data-level="2.4" data-path="background.html"><a href="background.html#for-details-on-sip-quantitative-metagenomics-and-qsip-please-refer-to-the-following-works"><i class="fa fa-check"></i><b>2.4</b> For details on SIP, quantitative metagenomics, and qSIP, please refer to the following works:</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="background.html"><a href="background.html#sip"><i class="fa fa-check"></i><b>2.4.1</b> SIP</a></li>
+<li class="chapter" data-level="2.4.2" data-path="background.html"><a href="background.html#quantitative-metagenomics-1"><i class="fa fa-check"></i><b>2.4.2</b> Quantitative metagenomics</a></li>
+<li class="chapter" data-level="2.4.3" data-path="background.html"><a href="background.html#qsip"><i class="fa fa-check"></i><b>2.4.3</b> qSIP</a></li>
+<li class="chapter" data-level="2.4.4" data-path="background.html"><a href="background.html#htssip-r-package"><i class="fa fa-check"></i><b>2.4.4</b> HTSSIP R package</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="quick-example.html"><a href="quick-example.html"><i class="fa fa-check"></i><b>3</b> Using SIPmg R package</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="quick-example.html"><a href="quick-example.html#example-workflow"><i class="fa fa-check"></i><b>3.1</b> Example workflow</a></li>
+<li class="chapter" data-level="3.2" data-path="quick-example.html"><a href="quick-example.html#load-required-data"><i class="fa fa-check"></i><b>3.2</b> Load required data</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="quick-example.html"><a href="quick-example.html#mag-coverage-data"><i class="fa fa-check"></i><b>3.2.1</b> MAG coverage data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="quick-example.html"><a href="quick-example.html#sequin-metadata"><i class="fa fa-check"></i><b>3.2.2</b> Sequin metadata</a></li>
+<li class="chapter" data-level="3.2.3" data-path="quick-example.html"><a href="quick-example.html#dilutions-data"><i class="fa fa-check"></i><b>3.2.3</b> Dilutions data</a></li>
+<li class="chapter" data-level="3.2.4" data-path="quick-example.html"><a href="quick-example.html#fractions-metadata"><i class="fa fa-check"></i><b>3.2.4</b> Fractions metadata</a></li>
+<li class="chapter" data-level="3.2.5" data-path="quick-example.html"><a href="quick-example.html#gtdb-style-taxonomy-data"><i class="fa fa-check"></i><b>3.2.5</b> GTDB style taxonomy data</a></li>
+<li class="chapter" data-level="3.2.6" data-path="quick-example.html"><a href="quick-example.html#mag-absolute-concentrations"><i class="fa fa-check"></i><b>3.2.6</b> MAG absolute concentrations</a></li>
+<li class="chapter" data-level="3.2.7" data-path="quick-example.html"><a href="quick-example.html#gc-content"><i class="fa fa-check"></i><b>3.2.7</b> GC content</a></li>
+<li class="chapter" data-level="3.2.8" data-path="quick-example.html"><a href="quick-example.html#log-scale-boolean"><i class="fa fa-check"></i><b>3.2.8</b> Log scale BOOLEAN</a></li>
+<li class="chapter" data-level="3.2.9" data-path="quick-example.html"><a href="quick-example.html#coefficient-of-variation"><i class="fa fa-check"></i><b>3.2.9</b> Coefficient of variation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="quick-example.html"><a href="quick-example.html#coverage-normalization-and-scaling"><i class="fa fa-check"></i><b>3.3</b> Coverage normalization and scaling</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="quick-example.html"><a href="quick-example.html#this-function-uses-the-following-datasets"><i class="fa fa-check"></i><b>3.3.1</b> This function uses the following datasets:</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="quick-example.html"><a href="quick-example.html#preparation-of-scaled-data-for-qsip-analysis"><i class="fa fa-check"></i><b>3.4</b> Preparation of scaled data for qSIP analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="quick-example.html"><a href="quick-example.html#estimation-of-atom-fraction-excess"><i class="fa fa-check"></i><b>3.5</b> Estimation of atom fraction excess</a></li>
+<li class="chapter" data-level="3.6" data-path="quick-example.html"><a href="quick-example.html#plot-the-atom-fraction-excess-plot"><i class="fa fa-check"></i><b>3.6</b> Plot the atom fraction excess plot</a></li>
+<li class="chapter" data-level="3.7" data-path="quick-example.html"><a href="quick-example.html#check-incorporator-list"><i class="fa fa-check"></i><b>3.7</b> Check incorporator list</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html"><i class="fa fa-check"></i><b>4</b> Scaling coverage data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#basic-approach-for-scaling"><i class="fa fa-check"></i><b>4.1</b> Basic approach for scaling</a></li>
+<li class="chapter" data-level="4.2" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#choice-of-regression-model"><i class="fa fa-check"></i><b>4.2</b> Choice of regression model</a></li>
+<li class="chapter" data-level="4.3" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#scaling-the-data"><i class="fa fa-check"></i><b>4.3</b> Scaling the data</a></li>
+<li class="chapter" data-level="4.4" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#comparison-of-the-fits"><i class="fa fa-check"></i><b>4.4</b> Comparison of the fits</a></li>
+<li class="chapter" data-level="4.5" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#what-if-there-were-no-sequins-added-in-the-study"><i class="fa fa-check"></i><b>4.5</b> What if there were no sequins added in the study</a></li>
+<li class="chapter" data-level="4.6" data-path="scaling-coverage-data.html"><a href="scaling-coverage-data.html#decision-on-the-method-to-scale-coverages"><i class="fa fa-check"></i><b>4.6</b> Decision on the method to scale coverages</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html"><i class="fa fa-check"></i><b>5</b> SIP metagenomics and identification of isotope incorporators</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>5.1</b> Comparison of the methods</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#afe-method"><i class="fa fa-check"></i><b>5.1.1</b> AFE method</a></li>
+<li class="chapter" data-level="5.1.2" data-path="identifying-incorporators.html"><a href="identifying-incorporators.html#mw-hr-sip"><i class="fa fa-check"></i><b>5.1.2</b> MW-HR-SIP</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to SIPmg</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="quick-example" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Using SIPmg R package<a href="quick-example.html#quick-example" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This R package was designed to facilitate statistical analyses using SIP metagenomic data. Particularly, coverage and taxonomic classification of metagenome-assembled genomes and metadata of fractionated DNA is used to identify incorporators and quantify isotopic enrichment.</p>
+<p>Overall, the package can perform the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Coverage normalization to absolute concentrations or relative coverage. Scaling of coverages to absolute abundances based on post-fractionation reference standards, called sequins.</p></li>
+<li><p>Statistical analysis based on either of</p></li>
+</ol>
+<ul>
+<li>AFE mathematical model by <a href="https://journals.asm.org/doi/10.1128/AEM.02280-15">Hungate et al. (2015)</a> or</li>
+<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
+<li>Analyses as offered by <a href="https://cran.r-project.org/web/packages/HTSSIP/index.html">HTS-SIP</a></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Data visualization for identification of isotope incorporators.</li>
+</ol>
+<div id="example-workflow" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Example workflow<a href="quick-example.html#example-workflow" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>qSIP analysis is typically performed using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data. 
+Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see <code>sequin_scaling.R</code> 
+For normalizing coverage values please see <code>pooling_funs.R</code> </p>
+<p>This R markdown primarily uses <code>Tidyverse</code>, <code>phyloseq</code>, and <code>HTSSIP</code> packages 
+This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
+<p>For this data, MetaSIPSim (developed by <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6">Barnett et al, 2020</a>) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in <a href="https://www.nature.com/articles/sdata201681">Singer et al, 2016</a>). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="quick-example.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load required libraries</span></span>
+<span id="cb1-2"><a href="quick-example.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="quick-example.html#cb1-3" aria-hidden="true" tabindex="-1"></a>list.of.packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;HTSSIP&quot;</span>, <span class="st">&quot;ggpubr&quot;</span>,<span class="st">&quot;data.table&quot;</span>)</span>
+<span id="cb1-4"><a href="quick-example.html#cb1-4" aria-hidden="true" tabindex="-1"></a>new.packages <span class="ot">&lt;-</span> list.of.packages[<span class="sc">!</span>(list.of.packages <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">&quot;Package&quot;</span>])]</span>
+<span id="cb1-5"><a href="quick-example.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(new.packages)) <span class="fu">install.packages</span>(new.packages, <span class="at">quiet =</span> T, <span class="at">dependencies =</span> T, <span class="at">repos =</span> <span class="st">&quot;http://cran.us.r-project.org&quot;</span>)</span>
+<span id="cb1-6"><a href="quick-example.html#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="quick-example.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-8"><a href="quick-example.html#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
+<span id="cb1-9"><a href="quick-example.html#cb1-9" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;phyloseq&quot;</span>)</span></code></pre></div>
+<pre><code>## Bioconductor version 3.16 (BiocManager 1.30.19), R 4.2.2 (2022-10-31 ucrt)</code></pre>
+<pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
+##   `force = TRUE` to re-install: &#39;phyloseq&#39;</code></pre>
+<pre><code>## Installation paths not writeable, unable to update packages
+##   path: C:/Program Files/R/R-4.2.2/library
+##   packages:
+##     boot, foreign, Matrix</code></pre>
+<pre><code>## Old packages: &#39;BiocParallel&#39;, &#39;blogdown&#39;, &#39;broom&#39;, &#39;cli&#39;, &#39;DESeq2&#39;, &#39;digest&#39;,
+##   &#39;distinct&#39;, &#39;doRNG&#39;, &#39;formatR&#39;, &#39;genefilter&#39;, &#39;GenomeInfoDb&#39;,
+##   &#39;GenomicRanges&#39;, &#39;ggbeeswarm&#39;, &#39;ggpmisc&#39;, &#39;htmlwidgets&#39;, &#39;isoband&#39;, &#39;locfit&#39;,
+##   &#39;maptools&#39;, &#39;nlme&#39;, &#39;purrr&#39;, &#39;RSQLite&#39;, &#39;Rttf2pt1&#39;, &#39;scuttle&#39;, &#39;shiny&#39;,
+##   &#39;testthat&#39;, &#39;xfun&#39;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="quick-example.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## ── Attaching packages
+## ───────────────────────────────────────
+## tidyverse 1.3.2 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="quick-example.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(phyloseq)</span>
+<span id="cb9-2"><a href="quick-example.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HTSSIP)</span>
+<span id="cb9-3"><a href="quick-example.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb9-4"><a href="quick-example.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SIPmg)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;SIPmg&#39;
+## 
+## The following objects are masked from &#39;package:HTSSIP&#39;:
+## 
+##     DESeq2_l2fc, HRSIP</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="quick-example.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">1000</span>)</span></code></pre></div>
+</div>
+<div id="load-required-data" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Load required data<a href="quick-example.html#load-required-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following files are required: </p>
+<div id="mag-coverage-data" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> MAG coverage data<a href="quick-example.html#mag-coverage-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Pooled coverages data as a comma separated file (.csv file) across samples for <code>Features</code> including sequins that were used as spike-ins. The followings columns are required: </p>
+<ol style="list-style-type: decimal">
+<li><p>Feature: A character string describing the <code>Feature</code> label</p></li>
+<li><p>Sample: The label for these n number of columns should be in the format of “‘isotope’_rep_#_fraction_#”. For instance, “12C_rep_1_fraction_1”. The number of sample columns should be the same as the product of (replicates, fractions, isotopes)</p></li>
+</ol>
+</div>
+<div id="sequin-metadata" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Sequin metadata<a href="quick-example.html#sequin-metadata" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Load the sequins metadata as a comma separated file (.csv file) which has the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>Feature: As described above</p></li>
+<li><p>Length: Length of the sequin in bp</p></li>
+<li><p>GC_content: GC content of the sequin</p></li>
+<li><p>Sequence: Sequin nucleotide sequence</p></li>
+<li><p>Concentration: Concentration of the sequin in attamoles/uL</p></li>
+</ol>
+</div>
+<div id="dilutions-data" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Dilutions data<a href="quick-example.html#dilutions-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Load dilutions data as a comma separated file (.csv file) that contains the following columns </p>
+<ol style="list-style-type: decimal">
+<li><p>Sample: Similar to the sample name as described above.</p></li>
+<li><p>Dilution: Dilution of sequins added to the fraction before sequencing.</p></li>
+</ol>
+</div>
+<div id="fractions-metadata" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Fractions metadata<a href="quick-example.html#fractions-metadata" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A fractions file as a comma separated file (.csv file) with the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>Replicate: Depends on how many replicates the study has </p></li>
+<li><p>Fractions: Typically in the range of 1-24 </p></li>
+<li><p>Buoyant_density: As calculated from the refractometer for each fraction and replicate </p></li>
+<li><p>Isotope - “12C”, “13C”, “14N”, “15N” etc. </p></li>
+<li><p>DNA_concentration </p></li>
+<li><p>Sample - In the format “‘isotope’_rep_#_fraction_#”. For instance 12C_rep_1_fraction_1 </p></li>
+</ol>
+</div>
+<div id="gtdb-style-taxonomy-data" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> GTDB style taxonomy data<a href="quick-example.html#gtdb-style-taxonomy-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A taxonomy file in the GTDB output format (.tsv format). Load the bacteria and archaea taxonomy outputs separately. The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea</p>
+</div>
+<div id="mag-absolute-concentrations" class="section level3 hasAnchor" number="3.2.6">
+<h3><span class="header-section-number">3.2.6</span> MAG absolute concentrations<a href="quick-example.html#mag-absolute-concentrations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>MAG absolute concentrations obtained from scaling_sequins.R. 
+<code>mag_tab</code> object obtained from the above script is to be used as the input here</p>
+</div>
+<div id="gc-content" class="section level3 hasAnchor" number="3.2.7">
+<h3><span class="header-section-number">3.2.7</span> GC content<a href="quick-example.html#gc-content" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>GC content of the MAGs as a comma separated file (.csv file). The table should contain the following columns: </p>
+<ol style="list-style-type: decimal">
+<li><p>OTU: MAG identifier such as the <code>Feature</code> label from the <code>sequin_scaling.R</code> script </p></li>
+<li><p>GC_content: GC content of the <code>Feature</code> in the range of 0-1 </p></li>
+</ol>
+</div>
+<div id="log-scale-boolean" class="section level3 hasAnchor" number="3.2.8">
+<h3><span class="header-section-number">3.2.8</span> Log scale BOOLEAN<a href="quick-example.html#log-scale-boolean" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale </p>
+</div>
+<div id="coefficient-of-variation" class="section level3 hasAnchor" number="3.2.9">
+<h3><span class="header-section-number">3.2.9</span> Coefficient of variation<a href="quick-example.html#coefficient-of-variation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Acceptable coefficient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation)</p>
+<p>Coverages above the threshold value will be flagged in the plots. Here a value of 20 is used. </p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="quick-example.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data</span></span>
+<span id="cb12-2"><a href="quick-example.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Coverage metadata</span></span>
+<span id="cb12-3"><a href="quick-example.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`</span></span>
+<span id="cb12-4"><a href="quick-example.html#cb12-4" aria-hidden="true" tabindex="-1"></a>f_tibble <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/coverage_metadata.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 124 Columns: 61
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): Feature
+## dbl (60): 12C_rep_1_fraction_10, 12C_rep_1_fraction_1, 12C_rep_1_fraction_2,...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="quick-example.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Sequins metadata</span></span>
+<span id="cb14-2"><a href="quick-example.html#cb14-2" aria-hidden="true" tabindex="-1"></a>sequins <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file=</span><span class="st">&quot;mock_input_data/sequins_metadata.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 115 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): Feature, Sequence
+## dbl (3): Length, GC_content, Concentration
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="quick-example.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Dilutions data</span></span>
+<span id="cb16-2"><a href="quick-example.html#cb16-2" aria-hidden="true" tabindex="-1"></a>seq_dil <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/dilutions_data.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 60 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): Sample
+## dbl (1): Dilution
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="quick-example.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale</span></span>
+<span id="cb18-2"><a href="quick-example.html#cb18-2" aria-hidden="true" tabindex="-1"></a>log_scale <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb18-3"><a href="quick-example.html#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="quick-example.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)</span></span>
+<span id="cb18-5"><a href="quick-example.html#cb18-5" aria-hidden="true" tabindex="-1"></a>coe_of_variation <span class="ot">=</span> <span class="dv">20</span> </span>
+<span id="cb18-6"><a href="quick-example.html#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="quick-example.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Taxonomy</span></span>
+<span id="cb18-8"><a href="quick-example.html#cb18-8" aria-hidden="true" tabindex="-1"></a>gtdbtk_bac_summary <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.bac120.summary.tsv&quot;</span>, </span>
+<span id="cb18-9"><a href="quick-example.html#cb18-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Rows: 33 Columns: 19
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr  (2): user_genome, classification
+## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="quick-example.html#cb20-1" aria-hidden="true" tabindex="-1"></a>gtdbtk_archaea <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.ar122.summary.tsv&quot;</span>, </span>
+<span id="cb20-2"><a href="quick-example.html#cb20-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Rows: 5 Columns: 19
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;\t&quot;
+## chr  (2): user_genome, classification
+## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="quick-example.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#GC content</span></span>
+<span id="cb22-2"><a href="quick-example.html#cb22-2" aria-hidden="true" tabindex="-1"></a>GC_content <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/GC_content.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 38 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): OTU
+## dbl (1): Gi
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="quick-example.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Fractions</span></span>
+<span id="cb24-2"><a href="quick-example.html#cb24-2" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/fractions.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 60 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): Isotope, Sample
+## dbl (4): Replicate, Fraction, Buoyant_density, DNA_concentration(ng/uL)
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div id="coverage-normalization-and-scaling" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Coverage normalization and scaling<a href="quick-example.html#coverage-normalization-and-scaling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Coverage data of MAGs (or features of interest) and sequins is scaled using sequin concentration to obtain absolute concentration of MAGs (or features of interest). For this step, either linear regression or robust linear regression can be used.</p>
+<p>If linear regression is used, the function <code>scale_features_lm</code> is used. The functions in <code>sequin_scaling_lm.R</code> are used for this step.</p>
+<p>If robust linear regression is used, the outliers impact on the regression models is minimized. For robust linear regression, <code>scale_features_rlm</code> is used. The functions in <code>sequin_scaling_rlm.R</code> are used for this step. In this example workflow, robust linear regression is used to scale coverage data in log10 scale.</p>
+<p>For more discussion on the choice of regression method and comparison of the two methods please see this <a href="scaling-coverage-data.html#scaling-coverage-data">vignette</a></p>
+<div id="this-function-uses-the-following-datasets" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> This function uses the following datasets:<a href="quick-example.html#this-function-uses-the-following-datasets" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Coverage data (<code>f_tibble</code>)</li>
+<li>Sequins metadata (<code>sequins</code>)</li>
+<li>Dilution of sequins used to add into the fractions (<code>seq_dil</code>)</li>
+</ol>
+<p>The regression scaling plots are saved in the project folder within a subfolder <code>sequin_scaling_plots</code></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="quick-example.html#cb26-1" aria-hidden="true" tabindex="-1"></a>taxonomy_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(gtdbtk_bac_summary, gtdbtk_archaea) <span class="co">#Combine bacteria and archaea taxonomy files if it has not been done yet</span></span>
+<span id="cb26-2"><a href="quick-example.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration</span></span>
+<span id="cb26-3"><a href="quick-example.html#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="quick-example.html#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="do">##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory</span></span>
+<span id="cb26-5"><a href="quick-example.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_rlm</span></span>
+<span id="cb26-6"><a href="quick-example.html#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_lm</span></span>
+<span id="cb26-7"><a href="quick-example.html#cb26-7" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation, <span class="at">save_plots =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :
+## &#39;rlm&#39; failed to converge in 20 steps</code></pre>
+<pre><code>## Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_rlm&#39; already exists</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="quick-example.html#cb29-1" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
+<div id="example-of-a-scaling-plot" class="section level4 hasAnchor" number="3.3.1.1">
+<h4><span class="header-section-number">3.3.1.1</span> Example of a scaling plot<a href="quick-example.html#example-of-a-scaling-plot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>An example of a scaling plot is as below</p>
+<pre><code>## Warning: The dot-dot notation (`..rr.label..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(rr.label)` instead.
+## ℹ The deprecated feature was likely used in the SIPmg package.
+##   Please report the issue to the authors.</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="SIPmg-vignette_files/figure-html/example%20scaling%20plot-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="preparation-of-scaled-data-for-qsip-analysis" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Preparation of scaled data for qSIP analysis<a href="quick-example.html#preparation-of-scaled-data-for-qsip-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The scaled abundance data, taxonomy data, and metadata is then converted to phyloseq objects and a master phyloseq object is created for qSIP analysis.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="quick-example.html#cb32-1" aria-hidden="true" tabindex="-1"></a>mag.table <span class="ot">=</span> phyloseq<span class="sc">::</span><span class="fu">otu_table</span>(mag_tab, <span class="at">taxa_are_rows =</span> <span class="cn">TRUE</span>) <span class="co">#Phyloseq OTU table</span></span>
+<span id="cb32-2"><a href="quick-example.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="quick-example.html#cb32-3" aria-hidden="true" tabindex="-1"></a>taxonomy.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">tax.table</span>(taxonomy_tibble) <span class="co"># Create a taxonomy phyloseq object</span></span>
+<span id="cb32-4"><a href="quick-example.html#cb32-4" aria-hidden="true" tabindex="-1"></a>samples.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">sample.table</span>(fractions) <span class="co"># Create a samples phyloseq object</span></span>
+<span id="cb32-5"><a href="quick-example.html#cb32-5" aria-hidden="true" tabindex="-1"></a>phylo.qSIP <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">phylo.table</span>(mag.table, taxonomy.object, samples.object) <span class="co"># Make a phyloseq table for downstream qSIP analysis</span></span></code></pre></div>
+</div>
+<div id="estimation-of-atom-fraction-excess" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Estimation of atom fraction excess<a href="quick-example.html#estimation-of-atom-fraction-excess" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following steps estimate the atom fraction excess (AFE) in the MAGs. This calculation is based on the mathematical model suggested by <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a>. In the article, the authors suggest that GC contents of the individual biological features of interest should be accounted for to have a better estimate of AFE. Through the power of metagenomic analysis and the recovery of MAGs, one can estimate the GC content of features of interest and thereby obtain a better estimate of AFE. Thus, here the user would use the GC contents of MAGs in the AFE estimations and obtain isotopic enrichment of individual MAGs.</p>
+<p>An important consideration is that the AFE calculations are based on a mathematical model and are not an absolute estimate of isotopic enrichment. One of the goals of AFE estimation is to determine isotope incorporators.</p>
+<p>In this example workflow, the approach reported in <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a> is used to determine incorporators.</p>
+<p>For this step, the following are used:</p>
+<ol style="list-style-type: decimal">
+<li>Master phyloseq object from the previous step</li>
+<li>GC content</li>
+</ol>
+<p>Thanks to <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616">HTSSIP R package</a>, bootstrapping can be performed faster with multithreading.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="quick-example.html#cb33-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb33-2"><a href="quick-example.html#cb33-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb33-3"><a href="quick-example.html#cb33-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb33-4"><a href="quick-example.html#cb33-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span></code></pre></div>
+<pre><code>## Warning: `mutate_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `mutate()` instead.
+## ℹ See vignette(&#39;programming&#39;) for more help
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
+<pre><code>## Warning: `select_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `select()` instead.
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
+<pre><code>## Warning: `filter_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `filter()` instead.
+## ℹ See vignette(&#39;programming&#39;) for more help
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
+<pre><code>## Warning: `summarise_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `summarise()` instead.
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
+<pre><code>## Warning: `group_by_()` was deprecated in dplyr 0.7.0.
+## ℹ Please use `group_by()` instead.
+## ℹ See vignette(&#39;programming&#39;) for more help
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="quick-example.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb39-2"><a href="quick-example.html#cb39-2" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>) <span class="co">#Change &quot;parallel = FALSE&quot; to compute using a single-core</span></span></code></pre></div>
+</div>
+<div id="plot-the-atom-fraction-excess-plot" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Plot the atom fraction excess plot<a href="quick-example.html#plot-the-atom-fraction-excess-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence limits. In the same way as reported in <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a>, a MAG is considered an incorporator if the lower confidence interval of its AFE is above zero.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="quick-example.html#cb40-1" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb40-2"><a href="quick-example.html#cb40-2" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="quick-example.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
+<span id="cb40-4"><a href="quick-example.html#cb40-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> <span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
+<span id="cb40-5"><a href="quick-example.html#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="quick-example.html#cb40-6" aria-hidden="true" tabindex="-1"></a>(<span class="at">atom_f_excess_plot =</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(df_atomX_boot, <span class="fu">aes</span>(OTU, A, <span class="at">ymin=</span>A_CI_low, <span class="at">ymax=</span>A_CI_high, <span class="at">color=</span>Incorporator)) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="quick-example.html#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">size=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="quick-example.html#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>() <span class="sc">+</span></span>
+<span id="cb40-9"><a href="quick-example.html#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">&#39;dashed&#39;</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="quick-example.html#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&#39;MAGs&#39;</span>, <span class="at">y=</span><span class="st">&#39;Atom fraction excess&#39;</span>) <span class="sc">+</span></span>
+<span id="cb40-11"><a href="quick-example.html#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb40-12"><a href="quick-example.html#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb40-13"><a href="quick-example.html#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Isotope incorporating MAGs&quot;</span>))</span></code></pre></div>
+<p><img src="SIPmg-vignette_files/figure-html/Plot%20atom%20fraction%20excess-1.png" width="672" /></p>
+</div>
+<div id="check-incorporator-list" class="section level2 hasAnchor" number="3.7">
+<h2><span class="header-section-number">3.7</span> Check incorporator list<a href="quick-example.html#check-incorporator-list" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="quick-example.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb41-2"><a href="quick-example.html#cb41-2" aria-hidden="true" tabindex="-1"></a>n_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="quick-example.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="quick-example.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  nrow </span>
+<span id="cb41-5"><a href="quick-example.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator list</span></span>
+<span id="cb41-6"><a href="quick-example.html#cb41-6" aria-hidden="true" tabindex="-1"></a>incorporator_list <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">incorporators_taxonomy</span>(<span class="at">taxonomy =</span> taxonomy_tibble, <span class="at">bootstrapped_AFE_table =</span> df_atomX_boot)</span>
+<span id="cb41-7"><a href="quick-example.html#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb41-8"><a href="quick-example.html#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators:&#39;</span>, n_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>## Number of incorporators: 28</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="quick-example.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(incorporator_list, <span class="at">n =</span> <span class="fu">nrow</span>(incorporator_list))</span></code></pre></div>
+<pre><code>## # A tibble: 28 × 2
+##    OTU         taxonomy                       
+##    &lt;fct&gt;       &lt;chr&gt;                          
+##  1 NC_000913.3 Terriglobusroseus              
+##  2 NC_003450.3 Segniliparusrotundus           
+##  3 NC_008261.1 Nocardiopsisdassonvillei       
+##  4 NC_010067.1 Olsenellauli                   
+##  5 NC_014008.1 Meiothermus_Bsilvanus          
+##  6 NC_014168.1 Meiothermus_Bsilvanus          
+##  7 NC_014210.1 Hungateiclostridiumthermocellum
+##  8 NC_014211.1 Clostridium_Pperfringens       
+##  9 NC_014212.1 Desulfosporosinusacidiphilus   
+## 10 NC_014213.1 Desulfosporosinusacidiphilus   
+## 11 NC_014214.1 Desulfosporosinusacidiphilus   
+## 12 NC_014363.1 Desulfosporosinusmeridiei      
+## 13 NC_015761.1 Streptococcuspyogenes          
+## 14 NC_017033.1 Thermobacilluscomposti         
+## 15 NC_018014.1 Hirschiabaltica                
+## 16 NC_018066.1 Hirschiabaltica                
+## 17 NC_018068.1 Salmonellaarizonae             
+## 18 NC_019792.1 Pseudomonas_Astutzeri_AE       
+## 19 NC_019897.1 Pseudomonas_Astutzeri_AE       
+## 20 NC_019936.1 Frateuriaaurantia              
+## 21 NC_019937.1 Sediminispirochaetasmaragdinae 
+## 22 NC_019938.1 Fervidobacteriumpennivorans    
+## 23 NC_019939.1 Coraliomargaritaakajimensis    
+## 24 NC_019964.1 Halovivaxruber                 
+## 25 NC_019974.1 Natronobacteriumgregoryi       
+## 26 NC_019975.1 Natronococcusoccultus          
+## 27 NC_019976.1 Natronococcusoccultus          
+## 28 NC_021184.1 Natronococcusoccultus</code></pre>
+<p>It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this <a href="identifying-incorporators.html#identifying-incorporators">vignette</a></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="quick-example.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.2.2 (2022-10-31 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Canada.utf8  LC_CTYPE=English_Canada.utf8   
+## [3] LC_MONETARY=English_Canada.utf8 LC_NUMERIC=C                   
+## [5] LC_TIME=English_Canada.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] SIPmg_1.4           ggpubr_0.5.0        HTSSIP_1.4.1       
+##  [4] phyloseq_1.42.0     forcats_0.5.2       stringr_1.5.0      
+##  [7] dplyr_1.0.10        purrr_0.3.5         readr_2.1.3        
+## [10] tidyr_1.2.1         tibble_3.1.8        ggplot2_3.4.0      
+## [13] tidyverse_1.3.2     BiocManager_1.30.19
+## 
+## loaded via a namespace (and not attached):
+##   [1] readxl_1.4.1                backports_1.4.1            
+##   [3] plyr_1.8.8                  igraph_1.3.5               
+##   [5] lazyeval_0.2.2              splines_4.2.2              
+##   [7] BiocParallel_1.32.4         GenomeInfoDb_1.34.4        
+##   [9] digest_0.6.30               foreach_1.5.2              
+##  [11] htmltools_0.5.4             fansi_1.0.3                
+##  [13] magrittr_2.0.3              memoise_2.0.1              
+##  [15] googlesheets4_1.0.1         cluster_2.1.4              
+##  [17] tzdb_0.3.0                  Biostrings_2.66.0          
+##  [19] annotate_1.76.0             modelr_0.1.10              
+##  [21] matrixStats_0.63.0          vroom_1.6.0                
+##  [23] timechange_0.1.1            colorspace_2.0-3           
+##  [25] blob_1.2.3                  rvest_1.0.3                
+##  [27] haven_2.5.1                 xfun_0.35                  
+##  [29] crayon_1.5.2                RCurl_1.98-1.9             
+##  [31] jsonlite_1.8.4              survival_3.4-0             
+##  [33] iterators_1.0.14            ape_5.6-2                  
+##  [35] glue_1.6.2                  gtable_0.3.1               
+##  [37] gargle_1.2.1                zlibbioc_1.44.0            
+##  [39] XVector_0.38.0              DelayedArray_0.24.0        
+##  [41] car_3.1-1                   Rhdf5lib_1.20.0            
+##  [43] BiocGenerics_0.44.0         abind_1.4-5                
+##  [45] scales_1.2.1                DBI_1.1.3                  
+##  [47] rstatix_0.7.1               Rcpp_1.0.9                 
+##  [49] xtable_1.8-4                bit_4.0.5                  
+##  [51] stats4_4.2.2                httr_1.4.4                 
+##  [53] RColorBrewer_1.1-3          ellipsis_0.3.2             
+##  [55] farver_2.1.1                pkgconfig_2.0.3            
+##  [57] XML_3.99-0.13               sass_0.4.4                 
+##  [59] dbplyr_2.2.1                locfit_1.5-9.6             
+##  [61] utf8_1.2.2                  labeling_0.4.2             
+##  [63] polynom_1.4-1               tidyselect_1.2.0           
+##  [65] rlang_1.0.6                 reshape2_1.4.4             
+##  [67] AnnotationDbi_1.60.0        munsell_0.5.0              
+##  [69] cellranger_1.1.0            tools_4.2.2                
+##  [71] cachem_1.0.6                cli_3.4.1                  
+##  [73] generics_0.1.3              RSQLite_2.2.19             
+##  [75] ade4_1.7-20                 broom_1.0.1                
+##  [77] evaluate_0.19               biomformat_1.26.0          
+##  [79] fastmap_1.1.0               yaml_2.3.6                 
+##  [81] knitr_1.41                  bit64_4.0.5                
+##  [83] fs_1.5.2                    KEGGREST_1.38.0            
+##  [85] nlme_3.1-160                xml2_1.3.3                 
+##  [87] compiler_4.2.2              rstudioapi_0.14            
+##  [89] png_0.1-8                   ggsignif_0.6.4             
+##  [91] reprex_2.0.2                geneplotter_1.76.0         
+##  [93] bslib_0.4.2                 stringi_1.7.8              
+##  [95] highr_0.10                  lattice_0.20-45            
+##  [97] Matrix_1.5-3                vegan_2.6-4                
+##  [99] permute_0.9-7               multtest_2.54.0            
+## [101] vctrs_0.5.1                 pillar_1.8.1               
+## [103] lifecycle_1.0.3             rhdf5filters_1.10.0        
+## [105] jquerylib_0.1.4             data.table_1.14.6          
+## [107] bitops_1.0-7                GenomicRanges_1.50.1       
+## [109] R6_2.5.1                    bookdown_0.31              
+## [111] IRanges_2.32.0              codetools_0.2-18           
+## [113] MASS_7.3-58.1               assertthat_0.2.1           
+## [115] rhdf5_2.42.0                SummarizedExperiment_1.28.0
+## [117] DESeq2_1.38.1               withr_2.5.0                
+## [119] S4Vectors_0.36.1            GenomeInfoDbData_1.2.9     
+## [121] mgcv_1.8-41                 parallel_4.2.2             
+## [123] hms_1.1.2                   grid_4.2.2                 
+## [125] rmarkdown_2.19              MatrixGenerics_1.10.0      
+## [127] carData_3.0-5               googledrive_2.0.0          
+## [129] Biobase_2.58.0              lubridate_1.9.0</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="background.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="scaling-coverage-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

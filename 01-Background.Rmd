@@ -1,0 +1,40 @@
+# Background {#background}
+
+This section introduces a bit of a background on the methodologies used in this pipeline, such as stable isotope probing, quantitative metagenomics, and quantitative stable isotope probing. References as a point of departure for more reading are also provided.
+
+## Stable isotope probing
+
+Stable isotope probing (SIP) targets active populations within complex microbiomes by providing growth substrates enriched in a heavy stable isotope of carbon, nitrogen, or oxygen. In DNA-SIP, the DNA of microbes actively incorporating the labelled substrate into their DNA during cell division and growth would become increasingly labelled and heavier compared to the microbes not incorporating the substrate into their DNA. Heavier DNA can be physically separated via isopycnic centrifugation on a CsCl gradient, followed by fractionation. Sequencing effort on the “heavier density fractions” could inform the identity and function of microbes that actively incorporated the isotopic substrate into their DNA. Thus, DNA-SIP is a powerful technique to link the identity and function of environmental microbes. 
+
+However, traditional DNA-SIP is only a qualitative technique to identify active microbial populations and no quantitative estimates of isotopic enrichment of DNA are provided. For instance, the distinction between labelled and unlabelled microbes is defined by density gradient regions, limiting the resolution of taxon-specific responses to labelled or unlabelled. Moreover, there exists a guanine-cytosine (GC) bias in conventional SIP studies. The native buoyant density of DNA can differ by as much as 0.05 g/mL over the range of GC contents that can occur in complex communities. Lighter GC-content genomes may not shift into the researcher-assigned “heavier density fractions”, while high GC-content genomes may fall in the “heavier density fractions” without any isotopic substrate assimilation. Thus, a qualitative analysis may mask the true incorporators and, worse, falsely identify non-incorporators as incorporators, skewing the analysis of the study. 
+
+
+## Quantitative metagenomics
+
+Although metagenomics offers a comprehensive account of the metabolic repertoire in an environment, typically, the data is compositional. Relative abundance of genes or taxa is estimated to determine microbial community dynamics, which is directly influenced by the dynamics of rest of the community. Even if a certain gene remains in the same concentration, its relative abundance changes if a certain other gene increases/decreases in concentration. Absolute abundance of gene/genome can be critical, for instance, in the surveillance of a pathogenic gene/genome in an environment. For quantitative measurements of microbial taxon absolute abundance in a given metagenomic sample, [Hardwick et al. (2018)](https://www.nature.com/articles/s41467-018-05555-0) proposed synthetic spike-ins, or sequins, as internal reference standards. Reference standards in metagenomics can act as scaling factors to evaluate quantitative estimates of individual biological features, in this case, genes or genomes. 
+
+## Quantitative SIP (qSIP)
+
+In quantitative SIP (qSIP), quantitative estimates of isotope incorporation, expressed as atom fraction excess (AFE), are calculated based on a mathematical model. Quantitative estimates of isotopic enrichment of DNA facilitate accurate and sensitive estimates of substrate uptake measurements, and growth and mortality rates of individual taxa in a complex community. Moreover, qSIP analysis is less susceptible to GC and enrichment biases, and taxon abundance, making it amenable to quantify isotopic incorporations in a complex community such as the activated sludge microbiome, with in-situ conditions. Integration of qSIP and quantitative metagenomics (qSIP metagenomics) facilitates the exploration of active microbial populations' taxonomic and metabolic diversity with a quantitative estimate of their abundance and isotope incorporation. 
+
+
+## For details on SIP, quantitative metagenomics, and qSIP, please refer to the following works:
+
+### SIP
+[Neufeld, Josh D., Jyotsna Vohra, Marc G. Dumont, Tillmann Lueders, Mike Manefield, Michael W. Friedrich, and J. Colin Murrell. 2007. “DNA Stable-Isotope Probing.” Nature Protocols 2 (4): 860–66.](https://www.nature.com/articles/nprot.2007.109)
+
+[Neufeld JD, Dumont MG, Vohra J, Murrell JC. Methodological considerations for the use of stable isotope probing in microbial ecology. Microbial Ecology 2007; 53: 435–442.](https://link.springer.com/article/10.1007/s00248-006-9125-x)
+
+[Buckley DH, Huangyutitham V, Hsu S-F, Nelson TA. Stable isotope probing with 15N achieved by disentangling the effects of genome G+ C content and isotope enrichment on DNA density. Applied and environmental microbiology 2007; 73: 3189–3195.](https://journals.asm.org/doi/10.1128/AEM.02609-06)
+
+### Quantitative metagenomics
+[Hardwick SA, Chen WY, Wong T, Kanakamedala BS, Deveson IW, Ongley SE, et al. Synthetic microbe communities provide internal reference standards for metagenome sequencing and analysis. Nature Communications 2018; 9: 3096.](https://www.nature.com/articles/s41467-018-05555-0)
+
+### qSIP
+[Hungate BA, Mau RL, Schwartz E, Caporaso JG, Dijkstra P, Gestel N van, et al. Quantitative Microbial Ecology through Stable Isotope Probing. Appl Environ Microbiol 2015; 81: 7570–7581.](https://journals.asm.org/doi/10.1128/AEM.02280-15)
+
+[Sieradzki ET, Koch BJ, Greenlon A, Sachdeva R, Malmstrom RR, Mau RL, et al. Measurement error and resolution in quantitative stable isotope probing: implications for experimental design. Msystems 2020; 5: e00151-20.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)
+
+### HTSSIP R package
+
+[Youngblut ND, Barnett SE, Buckley DH. HTSSIP: An R package for analysis of high throughput sequencing data from nucleic acid stable isotope probing (SIP) experiments. PLOS ONE 2018; 13: e0189616.](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616)
