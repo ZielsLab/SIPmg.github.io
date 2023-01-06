@@ -3,4 +3,4 @@ date: "2016-05-05T21:48:51-07:00"
 title: About
 ---
 
-This is a "hello world" example website for the [**blogdown**](https://github.com/rstudio/blogdown) package. The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium).
+SIPmg is a statistical analysis package as part of a stable isotope probing (SIP) metagenomics study to identify isotope incorporating MAGs.The package utilizes either the qSIP model, ΔBD method, or DeSeq2-based methods such as HR-SIP and MW-HR-SIP based on the HTSSIP package. For more information on HTSSIP R package, please visit their vignette
