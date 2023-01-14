@@ -46,7 +46,7 @@ For illustrating the differences in the regression models, a different dataset, 
 
 This dataset can be found here
 
-```{r Load data 2, echo = FALSE}
+```{r Load data 2, echo = FALSE, warning = FALSE, message = FALSE}
 ##Load data
 #Coverage data
 f_tibble <- readr::read_csv("mock_input_data/coverages_outliers.csv")
@@ -77,7 +77,7 @@ For both scaling functions the following data and parameters are required
 
 If the robust linear regression is chosen, the function is `scale_features_rlm` which is performed the function file `sequin_scaling_rlm.R`.
 
-```{r robust linear regression}
+```{r robust linear regression, warning = FALSE, message = FALSE}
 mag_tab_scaled_rlm <- SIPmg::scale_features_rlm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, save_plots = FALSE)
 ```
 
@@ -87,13 +87,13 @@ If a linear regression is chosen, the function is `scale_features_lm` which is p
 If the user chooses linear regression, they can choose to perform outlier filtering based on the traditional Cook’s distance threshold of 4/n (n being the sample size). Only the outliers in the sequin coverage data are flagged as outliers with the Cook’s distance threshold and are filtered out. Later, the remaining data is subjected to linear regression to obtain model parameters and to scale coverage values of feature of interest.
 
 
-```{r linear regression}
+```{r linear regression, warning = FALSE, message = FALSE}
 mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_scale, coe_of_variation = coe_of_variation, cook_filtering = TRUE, save_plots = FALSE)
 ```
 
 ## Comparison of the fits
 
-```{r load images, echo = F}
+```{r load images, echo = F, warning = FALSE, message = FALSE}
 rlm_example = knitr::include_graphics("rlm-example.png")
 
 lm_example = knitr::include_graphics("lm-example.png")
@@ -105,7 +105,7 @@ As discussed previously, removing the outliers may not always be the best idea. 
 
 The `mag_tab_scaled_lm` function provides the plots for the visualization of Cook's distance for the sequin data in each fraction. In the plot below, an outlier is visualized. For this data, the Cook's distance threshold was 0.09, and the outlier had a Cook's distance of 10.8. The highly influential data point could well be the reason the linear regression model had a poor fit.
 
-```{r, outlier sequin coverages}
+```{r, outlier sequin coverages, warning = FALSE, message = FALSE}
 
 #Cook's distance threshold of the data set
 4/(length(mag_tab_scaled_lm$scale_fac$cooksd[[3]]))
@@ -119,7 +119,7 @@ cooksd_example = knitr::include_graphics("cooksd-example.png")
 
 Upon filtering the data to remove the outlier, the fit becomes much better for the linear regression model
 
-```{r better fit}
+```{r better fit, warning = FALSE, message = FALSE}
 #Linear regression plot with filtered outliers in sequin data
 filtered_lm_example = knitr::include_graphics("filtered_lm-example.png")
 ```
@@ -127,7 +127,7 @@ filtered_lm_example = knitr::include_graphics("filtered_lm-example.png")
 ## What if there were no sequins added in the study
 In our study, we realized that the sequin-scaled data provided the best correlation (Spearman correlation coefficient = 0.85), compared to methods without the use of sequins. However, not all studies would have access to sequins or could choose not to add sequins. We tested qSIP methods with absolute concentration of MAGs obtained as a product of fraction DNA concentration and either with MAG relative abundance (as performed by [Greenlon et al.](https://journals.asm.org/doi/10.1128/mSystems.00151-20)) or relative coverage (as performed by [Starr et al.](https://journals.asm.org/doi/10.1128/mSphere.00085-21)), or simply with relative coverage, i.e., without converting the MAG coverages to absolute concentration. We found that without sequins, simply using relative coverage provided better specificity (0.99) and good correlation (Spearman correlation coefficient = 0.76), compared to the other two methods. The user could choose any of the three approaches to obtain normalized coverages using the equation `coverage_normalization()` where the parameter approach would be chosen accordingly (either "greenlon", "starr", or "relative_coverage"). In this example, simple relative coverage will be estimated without converting to absolute concentration based on fraction DNA concentrations. The relative coverage table can then be converted to a phyloseq object to run incorporator identification and/or AFE estimation. For more details, please refer to the [incorporator identification section][SIP metagenomics and identification of isotope incorporators]
 
-```{r, estimating relative coverage}
+```{r, estimating relative coverage, warning = FALSE, message = FALSE}
 f_tibble <- readr::read_csv("mock_input_data/coverage_metadata.csv")
 rel.cov = SIPmg::coverage_normalization(f_tibble = f_tibble, approach = "relative_coverage")
 mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% tibble::column_to_rownames(var = "Feature")), taxa_are_rows = TRUE) #Phyloseq OTU table
@@ -140,6 +140,6 @@ mag.table = phyloseq::otu_table(as.matrix(rel.cov %>% tibble::column_to_rownames
 
 It can be seen from the above plots that the regression parameters differ based on the method of regression and whether or not data filtering is used. These regression parameters directly influence the estimation of concentrations of features of interest in the microbiome. Thus, the method for regression must be a careful choice. 
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 sessionInfo()
 ```

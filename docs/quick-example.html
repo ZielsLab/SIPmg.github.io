@@ -35,7 +35,7 @@ R package, please visit their vignette</p>" />
 <meta name="author" content="Pranav Sampara, Kate Waring, Ryan Ziels" />
 
 
-<meta name="date" content="2023-01-06" />
+<meta name="date" content="2023-01-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -227,7 +227,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <ul>
 <li>AFE mathematical model by <a href="https://journals.asm.org/doi/10.1128/AEM.02280-15">Hungate et al. (2015)</a> or</li>
-<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
+<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>.<br />
+Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
 <li>Analyses as offered by <a href="https://cran.r-project.org/web/packages/HTSSIP/index.html">HTS-SIP</a></li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
@@ -249,41 +250,16 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <span id="cb1-6"><a href="quick-example.html#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="quick-example.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb1-8"><a href="quick-example.html#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb1-9"><a href="quick-example.html#cb1-9" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;phyloseq&quot;</span>)</span></code></pre></div>
-<pre><code>## Bioconductor version 3.16 (BiocManager 1.30.19), R 4.2.2 (2022-10-31 ucrt)</code></pre>
-<pre><code>## Warning: package(s) not installed when version(s) same as or greater than current; use
-##   `force = TRUE` to re-install: &#39;phyloseq&#39;</code></pre>
-<pre><code>## Installation paths not writeable, unable to update packages
-##   path: C:/Program Files/R/R-4.2.2/library
-##   packages:
-##     boot, foreign, Matrix</code></pre>
-<pre><code>## Old packages: &#39;BiocParallel&#39;, &#39;blogdown&#39;, &#39;broom&#39;, &#39;cli&#39;, &#39;DESeq2&#39;, &#39;digest&#39;,
-##   &#39;distinct&#39;, &#39;doRNG&#39;, &#39;formatR&#39;, &#39;genefilter&#39;, &#39;GenomeInfoDb&#39;,
-##   &#39;GenomicRanges&#39;, &#39;ggbeeswarm&#39;, &#39;ggpmisc&#39;, &#39;htmlwidgets&#39;, &#39;isoband&#39;, &#39;locfit&#39;,
-##   &#39;maptools&#39;, &#39;nlme&#39;, &#39;purrr&#39;, &#39;RSQLite&#39;, &#39;Rttf2pt1&#39;, &#39;scuttle&#39;, &#39;shiny&#39;,
-##   &#39;testthat&#39;, &#39;xfun&#39;</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="quick-example.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<pre><code>## ── Attaching packages
-## ───────────────────────────────────────
-## tidyverse 1.3.2 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="quick-example.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(phyloseq)</span>
-<span id="cb9-2"><a href="quick-example.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HTSSIP)</span>
-<span id="cb9-3"><a href="quick-example.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb9-4"><a href="quick-example.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SIPmg)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;SIPmg&#39;
-## 
-## The following objects are masked from &#39;package:HTSSIP&#39;:
-## 
-##     DESeq2_l2fc, HRSIP</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="quick-example.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<span id="cb1-9"><a href="quick-example.html#cb1-9" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;phyloseq&quot;</span>)</span>
+<span id="cb1-10"><a href="quick-example.html#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="quick-example.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-12"><a href="quick-example.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(phyloseq)</span>
+<span id="cb1-13"><a href="quick-example.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HTSSIP)</span>
+<span id="cb1-14"><a href="quick-example.html#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-15"><a href="quick-example.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SIPmg)</span>
+<span id="cb1-16"><a href="quick-example.html#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="quick-example.html#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="quick-example.html#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="at">seed =</span> <span class="dv">1000</span>)</span></code></pre></div>
 </div>
 <div id="load-required-data" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Load required data<a href="quick-example.html#load-required-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -352,85 +328,33 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <h3><span class="header-section-number">3.2.9</span> Coefficient of variation<a href="quick-example.html#coefficient-of-variation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Acceptable coefficient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation)</p>
 <p>Coverages above the threshold value will be flagged in the plots. Here a value of 20 is used. </p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="quick-example.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data</span></span>
-<span id="cb12-2"><a href="quick-example.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Coverage metadata</span></span>
-<span id="cb12-3"><a href="quick-example.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`</span></span>
-<span id="cb12-4"><a href="quick-example.html#cb12-4" aria-hidden="true" tabindex="-1"></a>f_tibble <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/coverage_metadata.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 124 Columns: 61
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (1): Feature
-## dbl (60): 12C_rep_1_fraction_10, 12C_rep_1_fraction_1, 12C_rep_1_fraction_2,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="quick-example.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Sequins metadata</span></span>
-<span id="cb14-2"><a href="quick-example.html#cb14-2" aria-hidden="true" tabindex="-1"></a>sequins <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file=</span><span class="st">&quot;mock_input_data/sequins_metadata.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 115 Columns: 5
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (2): Feature, Sequence
-## dbl (3): Length, GC_content, Concentration
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="quick-example.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Dilutions data</span></span>
-<span id="cb16-2"><a href="quick-example.html#cb16-2" aria-hidden="true" tabindex="-1"></a>seq_dil <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/dilutions_data.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 60 Columns: 2
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): Sample
-## dbl (1): Dilution
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="quick-example.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale</span></span>
-<span id="cb18-2"><a href="quick-example.html#cb18-2" aria-hidden="true" tabindex="-1"></a>log_scale <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb18-3"><a href="quick-example.html#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="quick-example.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)</span></span>
-<span id="cb18-5"><a href="quick-example.html#cb18-5" aria-hidden="true" tabindex="-1"></a>coe_of_variation <span class="ot">=</span> <span class="dv">20</span> </span>
-<span id="cb18-6"><a href="quick-example.html#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="quick-example.html#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Taxonomy</span></span>
-<span id="cb18-8"><a href="quick-example.html#cb18-8" aria-hidden="true" tabindex="-1"></a>gtdbtk_bac_summary <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.bac120.summary.tsv&quot;</span>, </span>
-<span id="cb18-9"><a href="quick-example.html#cb18-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Rows: 33 Columns: 19
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;\t&quot;
-## chr  (2): user_genome, classification
-## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="quick-example.html#cb20-1" aria-hidden="true" tabindex="-1"></a>gtdbtk_archaea <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.ar122.summary.tsv&quot;</span>, </span>
-<span id="cb20-2"><a href="quick-example.html#cb20-2" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## Rows: 5 Columns: 19
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;\t&quot;
-## chr  (2): user_genome, classification
-## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="quick-example.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#GC content</span></span>
-<span id="cb22-2"><a href="quick-example.html#cb22-2" aria-hidden="true" tabindex="-1"></a>GC_content <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/GC_content.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 38 Columns: 2
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): OTU
-## dbl (1): Gi
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="quick-example.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Fractions</span></span>
-<span id="cb24-2"><a href="quick-example.html#cb24-2" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/fractions.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 60 Columns: 6
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (2): Isotope, Sample
-## dbl (4): Replicate, Fraction, Buoyant_density, DNA_concentration(ng/uL)
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="quick-example.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load data</span></span>
+<span id="cb2-2"><a href="quick-example.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Coverage metadata</span></span>
+<span id="cb2-3"><a href="quick-example.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`</span></span>
+<span id="cb2-4"><a href="quick-example.html#cb2-4" aria-hidden="true" tabindex="-1"></a>f_tibble <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/coverage_metadata.csv&quot;</span>)</span>
+<span id="cb2-5"><a href="quick-example.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="quick-example.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Sequins metadata</span></span>
+<span id="cb2-7"><a href="quick-example.html#cb2-7" aria-hidden="true" tabindex="-1"></a>sequins <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file=</span><span class="st">&quot;mock_input_data/sequins_metadata.csv&quot;</span>)</span>
+<span id="cb2-8"><a href="quick-example.html#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="quick-example.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Dilutions data</span></span>
+<span id="cb2-10"><a href="quick-example.html#cb2-10" aria-hidden="true" tabindex="-1"></a>seq_dil <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/dilutions_data.csv&quot;</span>)</span>
+<span id="cb2-11"><a href="quick-example.html#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="quick-example.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale</span></span>
+<span id="cb2-13"><a href="quick-example.html#cb2-13" aria-hidden="true" tabindex="-1"></a>log_scale <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb2-14"><a href="quick-example.html#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="quick-example.html#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)</span></span>
+<span id="cb2-16"><a href="quick-example.html#cb2-16" aria-hidden="true" tabindex="-1"></a>coe_of_variation <span class="ot">=</span> <span class="dv">20</span> </span>
+<span id="cb2-17"><a href="quick-example.html#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="quick-example.html#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#Taxonomy</span></span>
+<span id="cb2-19"><a href="quick-example.html#cb2-19" aria-hidden="true" tabindex="-1"></a>gtdbtk_bac_summary <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.bac120.summary.tsv&quot;</span>, </span>
+<span id="cb2-20"><a href="quick-example.html#cb2-20" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-21"><a href="quick-example.html#cb2-21" aria-hidden="true" tabindex="-1"></a>gtdbtk_archaea <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="st">&quot;mock_input_data/gtdbtk.ar122.summary.tsv&quot;</span>, </span>
+<span id="cb2-22"><a href="quick-example.html#cb2-22" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-23"><a href="quick-example.html#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#GC content</span></span>
+<span id="cb2-24"><a href="quick-example.html#cb2-24" aria-hidden="true" tabindex="-1"></a>GC_content <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">&quot;mock_input_data/GC_content.csv&quot;</span>)</span>
+<span id="cb2-25"><a href="quick-example.html#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="quick-example.html#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Fractions</span></span>
+<span id="cb2-27"><a href="quick-example.html#cb2-27" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;mock_input_data/fractions.csv&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="coverage-normalization-and-scaling" class="section level2 hasAnchor" number="3.3">
@@ -447,25 +371,17 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <li>Dilution of sequins used to add into the fractions (<code>seq_dil</code>)</li>
 </ol>
 <p>The regression scaling plots are saved in the project folder within a subfolder <code>sequin_scaling_plots</code></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="quick-example.html#cb26-1" aria-hidden="true" tabindex="-1"></a>taxonomy_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(gtdbtk_bac_summary, gtdbtk_archaea) <span class="co">#Combine bacteria and archaea taxonomy files if it has not been done yet</span></span>
-<span id="cb26-2"><a href="quick-example.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration</span></span>
-<span id="cb26-3"><a href="quick-example.html#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="quick-example.html#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="do">##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory</span></span>
-<span id="cb26-5"><a href="quick-example.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_rlm</span></span>
-<span id="cb26-6"><a href="quick-example.html#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_lm</span></span>
-<span id="cb26-7"><a href="quick-example.html#cb26-7" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation, <span class="at">save_plots =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<pre><code>## Warning in rlm.default(x, y, weights, method = method, wt.method = wt.method, :
-## &#39;rlm&#39; failed to converge in 20 steps</code></pre>
-<pre><code>## Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_rlm&#39; already exists</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="quick-example.html#cb29-1" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="quick-example.html#cb3-1" aria-hidden="true" tabindex="-1"></a>taxonomy_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(gtdbtk_bac_summary, gtdbtk_archaea) <span class="co">#Combine bacteria and archaea taxonomy files if it has not been done yet</span></span>
+<span id="cb3-2"><a href="quick-example.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration</span></span>
+<span id="cb3-3"><a href="quick-example.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="quick-example.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">##Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory</span></span>
+<span id="cb3-5"><a href="quick-example.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_rlm</span></span>
+<span id="cb3-6"><a href="quick-example.html#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#For rlm scaling using scale_features_lm</span></span>
+<span id="cb3-7"><a href="quick-example.html#cb3-7" aria-hidden="true" tabindex="-1"></a>mag_tab_scaled <span class="ot">&lt;-</span> SIPmg<span class="sc">::</span><span class="fu">scale_features_rlm</span>(f_tibble, sequins, seq_dil, log_scale, <span class="at">coe_of_variation =</span> coe_of_variation, <span class="at">save_plots =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-8"><a href="quick-example.html#cb3-8" aria-hidden="true" tabindex="-1"></a>mag_tab <span class="ot">=</span> <span class="fu">as.matrix</span>(mag_tab_scaled<span class="sc">$</span>mag_tab) <span class="co">#Extract absolute abundances as a matrix</span></span></code></pre></div>
 <div id="example-of-a-scaling-plot" class="section level4 hasAnchor" number="3.3.1.1">
 <h4><span class="header-section-number">3.3.1.1</span> Example of a scaling plot<a href="quick-example.html#example-of-a-scaling-plot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>An example of a scaling plot is as below</p>
-<pre><code>## Warning: The dot-dot notation (`..rr.label..`) was deprecated in ggplot2 3.4.0.
-## ℹ Please use `after_stat(rr.label)` instead.
-## ℹ The deprecated feature was likely used in the SIPmg package.
-##   Please report the issue to the authors.</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="SIPmg-vignette_files/figure-html/example%20scaling%20plot-1.png" width="672" /></p>
 </div>
 </div>
@@ -473,11 +389,11 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <div id="preparation-of-scaled-data-for-qsip-analysis" class="section level2 hasAnchor" number="3.4">
 <h2><span class="header-section-number">3.4</span> Preparation of scaled data for qSIP analysis<a href="quick-example.html#preparation-of-scaled-data-for-qsip-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The scaled abundance data, taxonomy data, and metadata is then converted to phyloseq objects and a master phyloseq object is created for qSIP analysis.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="quick-example.html#cb32-1" aria-hidden="true" tabindex="-1"></a>mag.table <span class="ot">=</span> phyloseq<span class="sc">::</span><span class="fu">otu_table</span>(mag_tab, <span class="at">taxa_are_rows =</span> <span class="cn">TRUE</span>) <span class="co">#Phyloseq OTU table</span></span>
-<span id="cb32-2"><a href="quick-example.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="quick-example.html#cb32-3" aria-hidden="true" tabindex="-1"></a>taxonomy.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">tax.table</span>(taxonomy_tibble) <span class="co"># Create a taxonomy phyloseq object</span></span>
-<span id="cb32-4"><a href="quick-example.html#cb32-4" aria-hidden="true" tabindex="-1"></a>samples.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">sample.table</span>(fractions) <span class="co"># Create a samples phyloseq object</span></span>
-<span id="cb32-5"><a href="quick-example.html#cb32-5" aria-hidden="true" tabindex="-1"></a>phylo.qSIP <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">phylo.table</span>(mag.table, taxonomy.object, samples.object) <span class="co"># Make a phyloseq table for downstream qSIP analysis</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="quick-example.html#cb4-1" aria-hidden="true" tabindex="-1"></a>mag.table <span class="ot">=</span> phyloseq<span class="sc">::</span><span class="fu">otu_table</span>(mag_tab, <span class="at">taxa_are_rows =</span> <span class="cn">TRUE</span>) <span class="co">#Phyloseq OTU table</span></span>
+<span id="cb4-2"><a href="quick-example.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="quick-example.html#cb4-3" aria-hidden="true" tabindex="-1"></a>taxonomy.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">tax.table</span>(taxonomy_tibble) <span class="co"># Create a taxonomy phyloseq object</span></span>
+<span id="cb4-4"><a href="quick-example.html#cb4-4" aria-hidden="true" tabindex="-1"></a>samples.object <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">sample.table</span>(fractions) <span class="co"># Create a samples phyloseq object</span></span>
+<span id="cb4-5"><a href="quick-example.html#cb4-5" aria-hidden="true" tabindex="-1"></a>phylo.qSIP <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">phylo.table</span>(mag.table, taxonomy.object, samples.object) <span class="co"># Make a phyloseq table for downstream qSIP analysis</span></span></code></pre></div>
 </div>
 <div id="estimation-of-atom-fraction-excess" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> Estimation of atom fraction excess<a href="quick-example.html#estimation-of-atom-fraction-excess" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -490,66 +406,43 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 <li>GC content</li>
 </ol>
 <p>Thanks to <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616">HTSSIP R package</a>, bootstrapping can be performed faster with multithreading.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="quick-example.html#cb33-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
-<span id="cb33-2"><a href="quick-example.html#cb33-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
-<span id="cb33-3"><a href="quick-example.html#cb33-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
-<span id="cb33-4"><a href="quick-example.html#cb33-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span></code></pre></div>
-<pre><code>## Warning: `mutate_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `mutate()` instead.
-## ℹ See vignette(&#39;programming&#39;) for more help
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
-<pre><code>## Warning: `select_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `select()` instead.
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
-<pre><code>## Warning: `filter_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `filter()` instead.
-## ℹ See vignette(&#39;programming&#39;) for more help
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
-<pre><code>## Warning: `summarise_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `summarise()` instead.
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
-<pre><code>## Warning: `group_by_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `group_by()` instead.
-## ℹ See vignette(&#39;programming&#39;) for more help
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="quick-example.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
-<span id="cb39-2"><a href="quick-example.html#cb39-2" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>) <span class="co">#Change &quot;parallel = FALSE&quot; to compute using a single-core</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="quick-example.html#cb5-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb5-2"><a href="quick-example.html#cb5-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb5-3"><a href="quick-example.html#cb5-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb5-4"><a href="quick-example.html#cb5-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
+<span id="cb5-5"><a href="quick-example.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb5-6"><a href="quick-example.html#cb5-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>) <span class="co">#Change &quot;parallel = FALSE&quot; to compute using a single-core</span></span></code></pre></div>
 </div>
 <div id="plot-the-atom-fraction-excess-plot" class="section level2 hasAnchor" number="3.6">
 <h2><span class="header-section-number">3.6</span> Plot the atom fraction excess plot<a href="quick-example.html#plot-the-atom-fraction-excess-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence limits. In the same way as reported in <a href="https://journals.asm.org/doi/full/10.1128/AEM.02280-15">Hungate et al. (2015)</a>, a MAG is considered an incorporator if the lower confidence interval of its AFE is above zero.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="quick-example.html#cb40-1" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb40-2"><a href="quick-example.html#cb40-2" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb40-3"><a href="quick-example.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
-<span id="cb40-4"><a href="quick-example.html#cb40-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> <span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
-<span id="cb40-5"><a href="quick-example.html#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="quick-example.html#cb40-6" aria-hidden="true" tabindex="-1"></a>(<span class="at">atom_f_excess_plot =</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(df_atomX_boot, <span class="fu">aes</span>(OTU, A, <span class="at">ymin=</span>A_CI_low, <span class="at">ymax=</span>A_CI_high, <span class="at">color=</span>Incorporator)) <span class="sc">+</span></span>
-<span id="cb40-7"><a href="quick-example.html#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">size=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb40-8"><a href="quick-example.html#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>() <span class="sc">+</span></span>
-<span id="cb40-9"><a href="quick-example.html#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">&#39;dashed&#39;</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb40-10"><a href="quick-example.html#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&#39;MAGs&#39;</span>, <span class="at">y=</span><span class="st">&#39;Atom fraction excess&#39;</span>) <span class="sc">+</span></span>
-<span id="cb40-11"><a href="quick-example.html#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb40-12"><a href="quick-example.html#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb40-13"><a href="quick-example.html#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Isotope incorporating MAGs&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="quick-example.html#cb6-1" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb6-2"><a href="quick-example.html#cb6-2" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="quick-example.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
+<span id="cb6-4"><a href="quick-example.html#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> <span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
+<span id="cb6-5"><a href="quick-example.html#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="quick-example.html#cb6-6" aria-hidden="true" tabindex="-1"></a>(<span class="at">atom_f_excess_plot =</span> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(df_atomX_boot, <span class="fu">aes</span>(OTU, A, <span class="at">ymin=</span>A_CI_low, <span class="at">ymax=</span>A_CI_high, <span class="at">color=</span>Incorporator)) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="quick-example.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">size=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="quick-example.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_linerange</span>() <span class="sc">+</span></span>
+<span id="cb6-9"><a href="quick-example.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">linetype=</span><span class="st">&#39;dashed&#39;</span>, <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="quick-example.html#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">&#39;MAGs&#39;</span>, <span class="at">y=</span><span class="st">&#39;Atom fraction excess&#39;</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="quick-example.html#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb6-12"><a href="quick-example.html#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb6-13"><a href="quick-example.html#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Isotope incorporating MAGs&quot;</span>))</span></code></pre></div>
 <p><img src="SIPmg-vignette_files/figure-html/Plot%20atom%20fraction%20excess-1.png" width="672" /></p>
 </div>
 <div id="check-incorporator-list" class="section level2 hasAnchor" number="3.7">
 <h2><span class="header-section-number">3.7</span> Check incorporator list<a href="quick-example.html#check-incorporator-list" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="quick-example.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
-<span id="cb41-2"><a href="quick-example.html#cb41-2" aria-hidden="true" tabindex="-1"></a>n_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb41-3"><a href="quick-example.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb41-4"><a href="quick-example.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  nrow </span>
-<span id="cb41-5"><a href="quick-example.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator list</span></span>
-<span id="cb41-6"><a href="quick-example.html#cb41-6" aria-hidden="true" tabindex="-1"></a>incorporator_list <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">incorporators_taxonomy</span>(<span class="at">taxonomy =</span> taxonomy_tibble, <span class="at">bootstrapped_AFE_table =</span> df_atomX_boot)</span>
-<span id="cb41-7"><a href="quick-example.html#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
-<span id="cb41-8"><a href="quick-example.html#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators:&#39;</span>, n_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="quick-example.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb7-2"><a href="quick-example.html#cb7-2" aria-hidden="true" tabindex="-1"></a>n_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="quick-example.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="quick-example.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  nrow </span>
+<span id="cb7-5"><a href="quick-example.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator list</span></span>
+<span id="cb7-6"><a href="quick-example.html#cb7-6" aria-hidden="true" tabindex="-1"></a>incorporator_list <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">incorporators_taxonomy</span>(<span class="at">taxonomy =</span> taxonomy_tibble, <span class="at">bootstrapped_AFE_table =</span> df_atomX_boot)</span>
+<span id="cb7-7"><a href="quick-example.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb7-8"><a href="quick-example.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators:&#39;</span>, n_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
 <pre><code>## Number of incorporators: 28</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="quick-example.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(incorporator_list, <span class="at">n =</span> <span class="fu">nrow</span>(incorporator_list))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="quick-example.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(incorporator_list, <span class="at">n =</span> <span class="fu">nrow</span>(incorporator_list))</span></code></pre></div>
 <pre><code>## # A tibble: 28 × 2
 ##    OTU         taxonomy                       
 ##    &lt;fct&gt;       &lt;chr&gt;                          
@@ -582,7 +475,7 @@ This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
 ## 27 NC_019976.1 Natronococcusoccultus          
 ## 28 NC_021184.1 Natronococcusoccultus</code></pre>
 <p>It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this <a href="identifying-incorporators.html#identifying-incorporators">vignette</a></p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="quick-example.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="quick-example.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.2.2 (2022-10-31 ucrt)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 19044)

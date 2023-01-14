@@ -35,7 +35,7 @@ R package, please visit their vignette</p>" />
 <meta name="author" content="Pranav Sampara, Kate Waring, Ryan Ziels" />
 
 
-<meta name="date" content="2023-01-06" />
+<meta name="date" content="2023-01-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -223,7 +223,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>AFE mathematical model by <a href="https://journals.asm.org/doi/10.1128/AEM.02280-15">Hungate et al. (2015)</a> or
 <ul>
-<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>. Where <span class="math inline">\(I_{max}\)</span> is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
+<li>Delta buoyant density <span class="math inline">\(AFE_{ΔBD}\)</span> = <span class="math inline">\(\frac{W_{Lab}- W_{Light}}{I_{max}}\)</span>.<br />
+Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as discussed by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/">Birnie and Rickwood (1978)</a></li>
 <li>MW-HR-SIP <a href="https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full">Youngblut et al. </a></li>
 </ul></li>
 </ul>
@@ -234,236 +235,71 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">5.1.1</span> AFE method<a href="identifying-incorporators.html#afe-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Isotope incorporators from the introductory vignette were identified using the AFE method
 Reproducing the code here, we have</p>
-<pre><code>## Rows: 124 Columns: 61
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (1): Feature
-## dbl (60): 12C_rep_1_fraction_10, 12C_rep_1_fraction_1, 12C_rep_1_fraction_2,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 115 Columns: 5
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (2): Feature, Sequence
-## dbl (3): Length, GC_content, Concentration
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 60 Columns: 2
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): Sample
-## dbl (1): Dilution
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 33 Columns: 19
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;\t&quot;
-## chr  (2): user_genome, classification
-## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 5 Columns: 19
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;\t&quot;
-## chr  (2): user_genome, classification
-## lgl (17): fastani_reference, fastani_reference_radius, fastani_taxonomy, fas...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 38 Columns: 2
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (1): OTU
-## dbl (1): Gi
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 60 Columns: 6
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (2): Isotope, Sample
-## dbl (4): Replicate, Fraction, Buoyant_density, DNA_concentration(ng/uL)
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## Warning in dir.create(plot_dir): &#39;sequin_scaling_plots_lm&#39; already exists</code></pre>
-<pre><code>## Warning in file.remove(plot_dir): cannot remove file &#39;sequin_scaling_plots_lm&#39;,
-## reason &#39;Permission denied&#39;</code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="identifying-incorporators.html#cb69-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
-<span id="cb69-2"><a href="identifying-incorporators.html#cb69-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
-<span id="cb69-3"><a href="identifying-incorporators.html#cb69-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
-<span id="cb69-4"><a href="identifying-incorporators.html#cb69-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
-<span id="cb69-5"><a href="identifying-incorporators.html#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
-<span id="cb69-6"><a href="identifying-incorporators.html#cb69-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>)</span>
-<span id="cb69-7"><a href="identifying-incorporators.html#cb69-7" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb69-8"><a href="identifying-incorporators.html#cb69-8" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb69-9"><a href="identifying-incorporators.html#cb69-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator_qSIP =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
-<span id="cb69-10"><a href="identifying-incorporators.html#cb69-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">Incorporator_delbd =</span> A_delbd <span class="sc">-</span> A_delbd_sd <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb69-11"><a href="identifying-incorporators.html#cb69-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> stats<span class="sc">::</span><span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
-<span id="cb69-12"><a href="identifying-incorporators.html#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-13"><a href="identifying-incorporators.html#cb69-13" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb69-14"><a href="identifying-incorporators.html#cb69-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(taxonomy_tibble <span class="sc">%&gt;%</span> </span>
-<span id="cb69-15"><a href="identifying-incorporators.html#cb69-15" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">select</span>(user_genome, classification) <span class="sc">%&gt;%</span></span>
-<span id="cb69-16"><a href="identifying-incorporators.html#cb69-16" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">OTU =</span> user_genome)) </span></code></pre></div>
-<pre><code>## Joining, by = &quot;OTU&quot;</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="identifying-incorporators.html#cb24-1" aria-hidden="true" tabindex="-1"></a>atomX <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_atom_excess_MAGs</span>(phylo.qSIP,</span>
+<span id="cb24-2"><a href="identifying-incorporators.html#cb24-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_expr=</span><span class="st">&#39;Isotope==&quot;12C&quot;&#39;</span>,</span>
+<span id="cb24-3"><a href="identifying-incorporators.html#cb24-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">treatment_rep=</span><span class="st">&#39;Replicate&#39;</span>,</span>
+<span id="cb24-4"><a href="identifying-incorporators.html#cb24-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Gi =</span> GC_content)</span>
+<span id="cb24-5"><a href="identifying-incorporators.html#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Bootstrap confidence intervals</span></span>
+<span id="cb24-6"><a href="identifying-incorporators.html#cb24-6" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">qSIP_bootstrap_fcr</span>(atomX, <span class="at">n_boot=</span><span class="dv">10</span>)</span>
+<span id="cb24-7"><a href="identifying-incorporators.html#cb24-7" aria-hidden="true" tabindex="-1"></a>CI_threshold <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb24-8"><a href="identifying-incorporators.html#cb24-8" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="identifying-incorporators.html#cb24-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Incorporator_qSIP =</span> A_CI_fcr_low <span class="sc">&gt;</span> CI_threshold,</span>
+<span id="cb24-10"><a href="identifying-incorporators.html#cb24-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">Incorporator_delbd =</span> A_delbd <span class="sc">-</span> A_delbd_sd <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb24-11"><a href="identifying-incorporators.html#cb24-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">OTU =</span> stats<span class="sc">::</span><span class="fu">reorder</span>(OTU, <span class="sc">-</span>A))</span>
+<span id="cb24-12"><a href="identifying-incorporators.html#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="identifying-incorporators.html#cb24-13" aria-hidden="true" tabindex="-1"></a>df_atomX_boot <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb24-14"><a href="identifying-incorporators.html#cb24-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(taxonomy_tibble <span class="sc">%&gt;%</span> </span>
+<span id="cb24-15"><a href="identifying-incorporators.html#cb24-15" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">select</span>(user_genome, classification) <span class="sc">%&gt;%</span></span>
+<span id="cb24-16"><a href="identifying-incorporators.html#cb24-16" aria-hidden="true" tabindex="-1"></a>               dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">OTU =</span> user_genome)) </span></code></pre></div>
 </div>
 <div id="mw-hr-sip" class="section level3 hasAnchor" number="5.1.2">
 <h3><span class="header-section-number">5.1.2</span> MW-HR-SIP<a href="identifying-incorporators.html#mw-hr-sip" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="identifying-incorporators.html#cb71-1" aria-hidden="true" tabindex="-1"></a>windows <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">density_min=</span><span class="fu">c</span>(<span class="fl">1.71</span>,<span class="fl">1.72</span>, <span class="fl">1.73</span>), </span>
-<span id="cb71-2"><a href="identifying-incorporators.html#cb71-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
-<span id="cb71-3"><a href="identifying-incorporators.html#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="identifying-incorporators.html#cb71-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
-<span id="cb71-5"><a href="identifying-incorporators.html#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
-<span id="cb71-6"><a href="identifying-incorporators.html#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
-<span id="cb71-7"><a href="identifying-incorporators.html#cb71-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-8"><a href="identifying-incorporators.html#cb71-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
-<span id="cb71-9"><a href="identifying-incorporators.html#cb71-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
-<span id="cb71-10"><a href="identifying-incorporators.html#cb71-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sparsity_threshold =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>), </span>
-<span id="cb71-11"><a href="identifying-incorporators.html#cb71-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padj_cutoff =</span> padj_cutoff)</span></code></pre></div>
-<pre><code>## Sparsity threshold: 0 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.05 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.1 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.15 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.2 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.25 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.3 
-## Density window: 1.71-1.74</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.05 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.1 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.15 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.2 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.25 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.3 
-## Density window: 1.72-1.75</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.05 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.1 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.15 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.2 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.25 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold: 0.3 
-## Density window: 1.73-1.76</code></pre>
-<pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>## Sparsity threshold with the most rejected hypotheses: 0</code></pre>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="identifying-incorporators.html#cb136-1" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
-<span id="cb136-2"><a href="identifying-incorporators.html#cb136-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">incorp =</span> padj <span class="sc">&lt;</span> padj_cutoff)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="identifying-incorporators.html#cb25-1" aria-hidden="true" tabindex="-1"></a>windows <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">density_min=</span><span class="fu">c</span>(<span class="fl">1.71</span>,<span class="fl">1.72</span>, <span class="fl">1.73</span>), </span>
+<span id="cb25-2"><a href="identifying-incorporators.html#cb25-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">density_max=</span><span class="fu">c</span>(<span class="fl">1.74</span>,<span class="fl">1.75</span>,<span class="fl">1.76</span>))</span>
+<span id="cb25-3"><a href="identifying-incorporators.html#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="identifying-incorporators.html#cb25-4" aria-hidden="true" tabindex="-1"></a>padj_cutoff <span class="ot">=</span> <span class="fl">0.05</span></span>
+<span id="cb25-5"><a href="identifying-incorporators.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ncores = 6</span></span>
+<span id="cb25-6"><a href="identifying-incorporators.html#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#doParallel::registerDoParallel(ncores)</span></span>
+<span id="cb25-7"><a href="identifying-incorporators.html#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="identifying-incorporators.html#cb25-8" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> SIPmg<span class="sc">::</span><span class="fu">HRSIP</span>(<span class="at">physeq =</span> phylo.qSIP, <span class="at">design =</span> <span class="sc">~</span>Isotope,</span>
+<span id="cb25-9"><a href="identifying-incorporators.html#cb25-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">density_windows =</span> windows,</span>
+<span id="cb25-10"><a href="identifying-incorporators.html#cb25-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">sparsity_threshold =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.05</span>), </span>
+<span id="cb25-11"><a href="identifying-incorporators.html#cb25-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padj_cutoff =</span> padj_cutoff)</span>
+<span id="cb25-12"><a href="identifying-incorporators.html#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="identifying-incorporators.html#cb25-13" aria-hidden="true" tabindex="-1"></a>mw.hr.sip <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb25-14"><a href="identifying-incorporators.html#cb25-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">incorp =</span> padj <span class="sc">&lt;</span> padj_cutoff)</span></code></pre></div>
 <p>Compare number of incorporators</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="identifying-incorporators.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
-<span id="cb137-2"><a href="identifying-incorporators.html#cb137-2" aria-hidden="true" tabindex="-1"></a>qSIP_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb137-3"><a href="identifying-incorporators.html#cb137-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A, A_sd, Incorporator_qSIP) <span class="sc">%&gt;%</span></span>
-<span id="cb137-4"><a href="identifying-incorporators.html#cb137-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_qSIP <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb137-5"><a href="identifying-incorporators.html#cb137-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
-<span id="cb137-6"><a href="identifying-incorporators.html#cb137-6" aria-hidden="true" tabindex="-1"></a>n_qSIP_incorp <span class="ot">=</span> <span class="fu">nrow</span>(qSIP_incorp)</span>
-<span id="cb137-7"><a href="identifying-incorporators.html#cb137-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-8"><a href="identifying-incorporators.html#cb137-8" aria-hidden="true" tabindex="-1"></a>delbd_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
-<span id="cb137-9"><a href="identifying-incorporators.html#cb137-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) <span class="sc">%&gt;%</span></span>
-<span id="cb137-10"><a href="identifying-incorporators.html#cb137-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_delbd <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb137-11"><a href="identifying-incorporators.html#cb137-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
-<span id="cb137-12"><a href="identifying-incorporators.html#cb137-12" aria-hidden="true" tabindex="-1"></a>n_delbd_incorp <span class="ot">=</span> <span class="fu">nrow</span>(delbd_incorp)</span>
-<span id="cb137-13"><a href="identifying-incorporators.html#cb137-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-14"><a href="identifying-incorporators.html#cb137-14" aria-hidden="true" tabindex="-1"></a>mw.hr.sip_incorp <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
-<span id="cb137-15"><a href="identifying-incorporators.html#cb137-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, taxa, incorp) <span class="sc">%&gt;%</span></span>
-<span id="cb137-16"><a href="identifying-incorporators.html#cb137-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(incorp <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb137-17"><a href="identifying-incorporators.html#cb137-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="st">&quot;Incorporator_mw_hr.sip&quot;</span> <span class="ot">=</span> <span class="st">&quot;incorp&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb137-18"><a href="identifying-incorporators.html#cb137-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>taxa)</span>
-<span id="cb137-19"><a href="identifying-incorporators.html#cb137-19" aria-hidden="true" tabindex="-1"></a>n_mw.hr.sip_incorp <span class="ot">=</span> <span class="fu">nrow</span>(mw.hr.sip_incorp)</span>
-<span id="cb137-20"><a href="identifying-incorporators.html#cb137-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-21"><a href="identifying-incorporators.html#cb137-21" aria-hidden="true" tabindex="-1"></a>all_incorp_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(qSIP_incorp, dplyr<span class="sc">::</span><span class="fu">full_join</span>(delbd_incorp, mw.hr.sip_incorp, <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>), <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>)</span>
-<span id="cb137-22"><a href="identifying-incorporators.html#cb137-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-23"><a href="identifying-incorporators.html#cb137-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
-<span id="cb137-24"><a href="identifying-incorporators.html#cb137-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by qSIP:&#39;</span>, n_qSIP_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="identifying-incorporators.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get incorporator info</span></span>
+<span id="cb26-2"><a href="identifying-incorporators.html#cb26-2" aria-hidden="true" tabindex="-1"></a>qSIP_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="identifying-incorporators.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A, A_sd, Incorporator_qSIP) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="identifying-incorporators.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_qSIP <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="identifying-incorporators.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb26-6"><a href="identifying-incorporators.html#cb26-6" aria-hidden="true" tabindex="-1"></a>n_qSIP_incorp <span class="ot">=</span> <span class="fu">nrow</span>(qSIP_incorp)</span>
+<span id="cb26-7"><a href="identifying-incorporators.html#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="identifying-incorporators.html#cb26-8" aria-hidden="true" tabindex="-1"></a>delbd_incorp <span class="ot">=</span> df_atomX_boot <span class="sc">%&gt;%</span></span>
+<span id="cb26-9"><a href="identifying-incorporators.html#cb26-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, classification, A_delbd, A_delbd_sd, Incorporator_delbd) <span class="sc">%&gt;%</span></span>
+<span id="cb26-10"><a href="identifying-incorporators.html#cb26-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Incorporator_delbd <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-11"><a href="identifying-incorporators.html#cb26-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>classification)</span>
+<span id="cb26-12"><a href="identifying-incorporators.html#cb26-12" aria-hidden="true" tabindex="-1"></a>n_delbd_incorp <span class="ot">=</span> <span class="fu">nrow</span>(delbd_incorp)</span>
+<span id="cb26-13"><a href="identifying-incorporators.html#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="identifying-incorporators.html#cb26-14" aria-hidden="true" tabindex="-1"></a>mw.hr.sip_incorp <span class="ot">=</span> mw.hr.sip <span class="sc">%&gt;%</span></span>
+<span id="cb26-15"><a href="identifying-incorporators.html#cb26-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OTU, taxa, incorp) <span class="sc">%&gt;%</span></span>
+<span id="cb26-16"><a href="identifying-incorporators.html#cb26-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(incorp <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-17"><a href="identifying-incorporators.html#cb26-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="st">&quot;Incorporator_mw_hr.sip&quot;</span> <span class="ot">=</span> <span class="st">&quot;incorp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-18"><a href="identifying-incorporators.html#cb26-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>taxa)</span>
+<span id="cb26-19"><a href="identifying-incorporators.html#cb26-19" aria-hidden="true" tabindex="-1"></a>n_mw.hr.sip_incorp <span class="ot">=</span> <span class="fu">nrow</span>(mw.hr.sip_incorp)</span>
+<span id="cb26-20"><a href="identifying-incorporators.html#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="identifying-incorporators.html#cb26-21" aria-hidden="true" tabindex="-1"></a>all_incorp_tibble <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">full_join</span>(qSIP_incorp, dplyr<span class="sc">::</span><span class="fu">full_join</span>(delbd_incorp, mw.hr.sip_incorp, <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>), <span class="at">by =</span> <span class="st">&quot;OTU&quot;</span>)</span>
+<span id="cb26-22"><a href="identifying-incorporators.html#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="identifying-incorporators.html#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Print incorporator information</span></span>
+<span id="cb26-24"><a href="identifying-incorporators.html#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by qSIP:&#39;</span>, n_qSIP_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
 <pre><code>## Number of incorporators detected by qSIP: 25</code></pre>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="identifying-incorporators.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by ΔBD:&#39;</span>, n_delbd_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="identifying-incorporators.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by ΔBD:&#39;</span>, n_delbd_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
 <pre><code>## Number of incorporators detected by ΔBD: 25</code></pre>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="identifying-incorporators.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by MW-HR-SIP:&#39;</span>, n_mw.hr.sip_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="identifying-incorporators.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&#39;Number of incorporators detected by MW-HR-SIP:&#39;</span>, n_mw.hr.sip_incorp, <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
 <pre><code>## Number of incorporators detected by MW-HR-SIP: 6</code></pre>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="identifying-incorporators.html#cb143-1" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(all_incorp_tibble)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="identifying-incorporators.html#cb32-1" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(all_incorp_tibble)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["OTU"],"name":[1],"type":["chr"],"align":["left"]},{"label":["A"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["A_sd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Incorporator_qSIP"],"name":[4],"type":["lgl"],"align":["right"]},{"label":["A_delbd"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["A_delbd_sd"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Incorporator_delbd"],"name":[7],"type":["lgl"],"align":["right"]},{"label":["Incorporator_mw_hr.sip"],"name":[8],"type":["lgl"],"align":["right"]}],"data":[{"1":"NC_000913.3","2":"0.01559359","3":"0.002091374","4":"TRUE","5":"0.02406311","6":"0.003225629","7":"TRUE","8":"NA"},{"1":"NC_003450.3","2":"0.04847647","3":"0.003708503","4":"TRUE","5":"0.07472437","6":"0.005715178","7":"TRUE","8":"NA"},{"1":"NC_008261.1","2":"0.40987487","3":"0.005120050","4":"TRUE","5":"0.62217710","6":"0.007671753","7":"TRUE","8":"TRUE"},{"1":"NC_010067.1","2":"0.02115236","3":"0.002669788","4":"TRUE","5":"0.03263313","6":"0.004116374","7":"TRUE","8":"NA"},{"1":"NC_014008.1","2":"0.05571908","3":"0.001253195","4":"TRUE","5":"0.08588456","6":"0.001929710","7":"TRUE","8":"NA"},{"1":"NC_014168.1","2":"0.19241466","3":"0.002746633","4":"TRUE","5":"0.29510881","6":"0.004188570","7":"TRUE","8":"NA"},{"1":"NC_014210.1","2":"0.26572526","3":"0.001003649","4":"TRUE","5":"0.40677094","6":"0.001531631","7":"TRUE","8":"NA"},{"1":"NC_014211.1","2":"0.25457996","3":"0.004842409","4":"TRUE","5":"0.38969078","6":"0.007368179","7":"TRUE","8":"NA"},{"1":"NC_014212.1","2":"0.17145305","3":"0.013829994","4":"TRUE","5":"0.26328878","6":"0.021166596","7":"TRUE","8":"NA"},{"1":"NC_014213.1","2":"0.18323983","3":"0.009626021","4":"TRUE","5":"0.28122785","6":"0.014749334","7":"TRUE","8":"NA"},{"1":"NC_014214.1","2":"0.17572222","3":"0.005484273","4":"TRUE","5":"0.26974532","6":"0.008401266","7":"TRUE","8":"NA"},{"1":"NC_014363.1","2":"0.18240538","3":"0.003724266","4":"TRUE","5":"0.27994855","6":"0.005718211","7":"TRUE","8":"NA"},{"1":"NC_015761.1","2":"0.02075433","3":"0.001495422","4":"TRUE","5":"0.03202098","6":"0.002306621","7":"TRUE","8":"NA"},{"1":"NC_017033.1","2":"0.17788410","3":"0.004758109","4":"TRUE","5":"0.27309952","6":"0.007294859","7":"TRUE","8":"NA"},{"1":"NC_018014.1","2":"0.11933315","3":"0.002381048","4":"TRUE","5":"0.18348339","6":"0.003649853","7":"TRUE","8":"NA"},{"1":"NC_019792.1","2":"0.15582689","3":"0.001729569","4":"TRUE","5":"0.23937276","6":"0.002645053","7":"TRUE","8":"NA"},{"1":"NC_019897.1","2":"0.12756736","3":"0.002739246","4":"TRUE","5":"0.19611237","6":"0.004202457","7":"TRUE","8":"NA"},{"1":"NC_019936.1","2":"0.15923443","3":"0.003366670","4":"TRUE","5":"0.24457921","6":"0.005160172","7":"TRUE","8":"NA"},{"1":"NC_019937.1","2":"0.05922982","3":"0.003018288","4":"TRUE","5":"0.09129203","6":"0.004646234","7":"TRUE","8":"NA"},{"1":"NC_019938.1","2":"0.10114853","3":"0.004781642","4":"TRUE","5":"0.15558613","6":"0.007352333","7":"TRUE","8":"NA"},{"1":"NC_019939.1","2":"0.16398224","3":"0.011721812","4":"TRUE","5":"0.25182466","6":"0.017927258","7":"TRUE","8":"NA"},{"1":"NC_019964.1","2":"0.18205895","3":"0.003576154","4":"TRUE","5":"0.27942488","6":"0.005476378","7":"TRUE","8":"NA"},{"1":"NC_019974.1","2":"0.17720421","3":"0.002021406","4":"TRUE","5":"0.27195722","6":"0.003094519","7":"TRUE","8":"NA"},{"1":"NC_019975.1","2":"0.06581470","3":"0.012121626","4":"TRUE","5":"0.10139967","6":"0.018645191","7":"TRUE","8":"NA"},{"1":"NC_019976.1","2":"0.12916152","3":"0.001744027","4":"TRUE","5":"0.19853018","6":"0.002670578","7":"TRUE","8":"NA"},{"1":"NC_002737.2","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_009012.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_017095.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018066.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"},{"1":"NC_018515.1","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -475,7 +311,7 @@ It also appears that MW-HR-SIP outputs lower number of incorporators. In our stu
 
 We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user’s discretion that fits best their study.
 ## Session information</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="identifying-incorporators.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="identifying-incorporators.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.2.2 (2022-10-31 ucrt)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 19044)

@@ -3,7 +3,8 @@
 The isotope incorporators could be identified using the below methods:
 
 + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
-  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where $I_{max}$ is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        
+  Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
   + MW-HR-SIP [Youngblut et al. ](https://www.frontiersin.org/articles/10.3389/fmicb.2018.00570/full)
 
 While the first two methods gives a quantitative estimate of isotopic enrichment in a taxon to determine if it is an incorporator, the third method relies on differential abundance analysis over multiple overlapping windows. Please refer to Youngblut et al. and [HTS-SIP R package](https://cran.r-project.org/web/packages/HTSSIP/index.html) for more details.
@@ -16,7 +17,7 @@ While the first two methods gives a quantitative estimate of isotopic enrichment
 Isotope incorporators from the introductory vignette were identified using the AFE method
 Reproducing the code here, we have
 
-```{r Load data 3, echo = F}
+```{r Load data 3, echo = F, warning = FALSE, message = FALSE}
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
@@ -47,7 +48,7 @@ fractions = readr::read_csv("mock_input_data/fractions.csv")
 
 ```
 
-```{r estimate absolute concentrations 2, echo = F}
+```{r estimate absolute concentrations 2, echo = F, warning = FALSE, message = FALSE}
 taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if it has not been done yet
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
 
@@ -58,7 +59,7 @@ mag_tab_scaled_lm <- SIPmg::scale_features_lm(f_tibble, sequins, seq_dil, log_sc
 mag_tab = as.matrix(mag_tab_scaled_lm$mag_tab) #Extract absolute abundances as a matrix
 ```
 
-```{r Make phyloseq objects 2, echo = F}
+```{r Make phyloseq objects 2, echo = F, warning = FALSE, message = FALSE}
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 
@@ -67,7 +68,7 @@ samples.object = SIPmg::sample.table(fractions) # Create a samples phyloseq obje
 phylo.qSIP = SIPmg::phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
 ```
 
-```{r AFE methodGet bootstrapped AFE table 2}
+```{r AFE methodGet bootstrapped AFE table 2, warning = FALSE, message = FALSE}
 atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                control_expr='Isotope=="12C"',
                                treatment_rep='Replicate',
@@ -90,7 +91,7 @@ df_atomX_boot = df_atomX_boot %>%
 
 Check incorporators in the overlapping windows of 1.71 - 1.74; 1.72 - 1.75; 1.73 - 1.76. The windows must be chosen in a more judicious manner that fits the hypothesis of the study.
 
-```{r, MW-HR-SIP}
+```{r, MW-HR-SIP, warning = FALSE, message = FALSE}
 windows = data.frame(density_min=c(1.71,1.72, 1.73), 
                      density_max=c(1.74,1.75,1.76))
 
@@ -111,7 +112,7 @@ mw.hr.sip = mw.hr.sip %>%
 
 Compare number of incorporators
 
-```{r list incorporators 2}
+```{r list incorporators 2, warning = FALSE, message = FALSE}
 #Get incorporator info
 qSIP_incorp = df_atomX_boot %>%
   dplyr::select(OTU, classification, A, A_sd, Incorporator_qSIP) %>%
@@ -150,6 +151,6 @@ It also appears that MW-HR-SIP outputs lower number of incorporators. In our stu
 We are merely providing the different methods for the user to decide which method to apply for detecting incorporators in their study. The choice of the method is to the user's discretion that fits best their study.
 ## Session information
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 sessionInfo()
 ```

@@ -9,7 +9,8 @@ Overall, the package can perform the following:
 
 2. Statistical analysis based on either of 
   + AFE mathematical model by [Hungate et al. (2015)](https://journals.asm.org/doi/10.1128/AEM.02280-15) or
-  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
+  + Delta buoyant density $AFE_{ΔBD}$ = $\frac{W_{Lab}- W_{Light}}{I_{max}}$.        
+  Where Imax is the maximum linear shift in DNA BD (upon 100% labeling), as        discussed by [Birnie and Rickwood (1978)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2595786/)
   + Analyses as offered by [HTS-SIP](https://cran.r-project.org/web/packages/HTSSIP/index.html)
   
 3. Data visualization for identification of isotope incorporators.
@@ -25,7 +26,7 @@ This markdown uses functions from `functions_qSIP_MAGs.R` \n
 
 For this data, MetaSIPSim (developed by [Barnett et al, 2020](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-020-3372-6)) was used to simulate a data set from a hypothetical SIP workflow performed on the MBARC-26 mock community (as defined in [Singer et al, 2016](https://www.nature.com/articles/sdata201681)). The data set was further augmented with simulated post-fractionation sequin spike-ins and the data set was simulated to have all 26 organisms as incorporators. Some of the 26 organisms also had plasmids, which were assembled as distinct genomic units, adding the total genomic features in the simulated study to be 38
 
-```{r Load libraries}
+```{r Load libraries, warning = FALSE, message = FALSE}
 #Load required libraries
 
 list.of.packages <- c("tidyverse", "HTSSIP", "ggpubr","data.table")
@@ -124,7 +125,7 @@ Acceptable coefficient of variation for coverage and detection (eg. 20 for 20 % 
 Coverages above the threshold value will be flagged in the plots. Here a value of 20 is used. \n
 
 
-```{r Load data}
+```{r Load data, warning = FALSE, message = FALSE}
 ## Load data
 #Coverage metadata
 #Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
@@ -173,7 +174,7 @@ For more discussion on the choice of regression method and comparison of the two
 
 The regression scaling plots are saved in the project folder within a subfolder `sequin_scaling_plots`
 
-```{r estimate absolute concentrations}
+```{r estimate absolute concentrations, warning = FALSE, message = FALSE}
 taxonomy_tibble = dplyr::bind_rows(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if it has not been done yet
 #mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
 
@@ -188,7 +189,7 @@ mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a ma
 
 An example of a scaling plot is as below
 
-```{r example scaling plot, echo = FALSE}
+```{r example scaling plot, echo = FALSE, warning = FALSE, message = FALSE}
 mag_tab_scaled$plots$plots[[1]]
 ```
 
@@ -196,7 +197,7 @@ mag_tab_scaled$plots$plots[[1]]
 
 The scaled abundance data, taxonomy data, and metadata is then converted to phyloseq objects and a master phyloseq object is created for qSIP analysis.
 
-```{r Make phyloseq objects}
+```{r Make phyloseq objects, warning = FALSE, message = FALSE}
 
 mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
 
@@ -220,7 +221,7 @@ For this step, the following are used:
 
 Thanks to [HTSSIP R package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0189616), bootstrapping can be performed faster with multithreading.
 
-```{r Calculate atom fraction excess}
+```{r Calculate atom fraction excess, warning = FALSE, message = FALSE}
 atomX = SIPmg::qSIP_atom_excess_MAGs(phylo.qSIP,
                                control_expr='Isotope=="12C"',
                                treatment_rep='Replicate',
@@ -235,7 +236,7 @@ df_atomX_boot = SIPmg::qSIP_bootstrap_fcr(atomX, n_boot=10) #Change "parallel = 
 
 Plot the atom fraction excess data with 5 % and 95 % quantiles as the confidence limits. In the same way as reported in [Hungate et al. (2015)](https://journals.asm.org/doi/full/10.1128/AEM.02280-15), a MAG is considered an incorporator if the lower confidence interval of its AFE is above zero.
 
-```{r Plot atom fraction excess}
+```{r Plot atom fraction excess, warning = FALSE, message = FALSE}
 CI_threshold = 0
 df_atomX_boot = df_atomX_boot %>%
   dplyr::mutate(Incorporator = A_CI_fcr_low > CI_threshold,
@@ -253,7 +254,7 @@ df_atomX_boot = df_atomX_boot %>%
 
 ## Check incorporator list
 
-```{r incorporators}
+```{r incorporators, warning = FALSE, message = FALSE}
 
 #Get incorporator info
 n_incorp = df_atomX_boot %>%
@@ -268,6 +269,6 @@ print(incorporator_list, n = nrow(incorporator_list))
 
 It appears that not all incorporators were identified with the bootstrapping method. This could be due to the model unable to detect the incorporators. Another way to detect incorporators, as mentioned above, is to test with the ΔBD method or with the HR-SIP or MW-HR-SIP methods. For a more detailed discussion, please refer this [vignette](#identifying-incorporators)
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 sessionInfo()
 ```
